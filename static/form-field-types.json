@@ -1,0 +1,171 @@
+[
+  {
+    "form_field_type_id": 2,
+    "type": "number",
+    "created_at": "2018-06-25 03:38:40",
+    "updated_at": "2021-05-07 11:44:29",
+    "detail": "Numbers (Only Digit)",
+    "icon": "abacus",
+    "save_as": null
+  },
+  {
+    "form_field_type_id": 3,
+    "type": "selectbox",
+    "created_at": "2018-09-06 14:42:57",
+    "updated_at": "2021-05-07 11:44:29",
+    "detail": "Single Selection",
+    "icon": "chevron-square-down",
+    "save_as": null
+  },
+  {
+    "form_field_type_id": 4,
+    "type": "checkbox",
+    "created_at": "2018-09-06 14:43:00",
+    "updated_at": "2021-05-07 11:44:29",
+    "detail": "Multiple Selection",
+    "icon": "check-square",
+    "save_as": null
+  },
+  {
+    "form_field_type_id": 5,
+    "type": "radio",
+    "created_at": "2018-09-06 14:56:47",
+    "updated_at": "2021-05-07 11:44:29",
+    "detail": "Radio",
+    "icon": "dot-circle",
+    "save_as": null
+  },
+  {
+    "form_field_type_id": 6,
+    "type": "date",
+    "created_at": "2018-09-06 14:57:05",
+    "updated_at": "2021-05-07 11:44:29",
+    "detail": "Date",
+    "icon": "calendar-alt",
+    "save_as": null
+  },
+  {
+    "form_field_type_id": 7,
+    "type": "email",
+    "created_at": "2018-09-06 14:57:07",
+    "updated_at": "2021-05-07 11:44:29",
+    "detail": "Email",
+    "icon": "envelope",
+    "save_as": {
+      "type": "default_fields",
+      "value": "email",
+      "update_existing": false
+    }
+  },
+  {
+    "form_field_type_id": 8,
+    "type": "phone",
+    "created_at": "2018-09-06 14:57:09",
+    "updated_at": "2021-05-07 11:44:29",
+    "detail": "Mobile Phone",
+    "icon": "mobile",
+    "save_as": {
+      "type": "default_fields",
+      "value": "mobile_phone",
+      "update_existing": false
+    }
+  },
+  {
+    "form_field_type_id": 9,
+    "type": "textarea",
+    "created_at": "2018-11-30 11:31:23",
+    "updated_at": "2021-05-07 11:44:29",
+    "detail": "Text",
+    "icon": "font",
+    "save_as": null
+  },
+  {
+    "form_field_type_id": 11,
+    "type": "yes_no",
+    "created_at": "2018-11-30 11:31:23",
+    "updated_at": "2021-05-07 11:44:29",
+    "detail": "Yes-No Choice Radio",
+    "icon": "adjust",
+    "save_as": null
+  },
+  {
+    "form_field_type_id": 13,
+    "type": "rating",
+    "created_at": "2018-11-30 11:31:23",
+    "updated_at": "2021-05-07 11:44:29",
+    "detail": "Star Rating",
+    "icon": "star",
+    "save_as": null
+  },
+  {
+    "form_field_type_id": 22,
+    "type": "address",
+    "created_at": "2020-03-23 14:23:08",
+    "updated_at": "2021-05-07 11:44:29",
+    "detail": "Address",
+    "icon": "map-marker-alt",
+    "save_as": {
+      "type": "relation_field",
+      "table": "contact_addresses",
+      "value": "address",
+      "update_existing": true
+    }
+  },
+  {
+    "form_field_type_id": 23,
+    "type": "firstname",
+    "created_at": "2020-03-23 14:22:34",
+    "updated_at": "2021-05-07 11:44:29",
+    "detail": "First Name",
+    "icon": "clipboard-user",
+    "save_as": {
+      "type": "default_fields",
+      "value": "name",
+      "update_existing": true
+    }
+  },
+  {
+    "form_field_type_id": 24,
+    "type": "surname",
+    "created_at": "2020-03-23 14:22:34",
+    "updated_at": "2021-05-07 11:44:29",
+    "detail": "Last Name",
+    "icon": "clipboard-user",
+    "save_as": {
+      "type": "default_fields",
+      "value": "surname",
+      "update_existing": true
+    }
+  },
+  {
+    "form_field_type_id": 26,
+    "type": "salutation",
+    "created_at": "2020-03-23 14:22:34",
+    "updated_at": "2021-05-07 11:44:29",
+    "detail": "Salutation",
+    "icon": "hand-paper",
+    "save_as": {
+      "type": "default_fields",
+      "value": "salutation_id",
+      "update_existing": true
+    }
+  },
+  {
+    "form_field_type_id": 29,
+    "type": "transaction_type",
+    "created_at": "2022-09-06 14:14:24",
+    "updated_at": "2022-09-06 14:14:24",
+    "detail": "Transaction Type",
+    "icon": "hand-paper",
+    "save_as": null
+  },
+  {
+    "form_field_type_id": 30,
+    "type": "property_type",
+    "created_at": "2022-09-06 14:14:24",
+    "updated_at": null,
+    "detail": "Property Type",
+    "icon": "hand-paper",
+    "save_as": null
+  }
+]
