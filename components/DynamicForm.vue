@@ -3,17 +3,14 @@
     <!-- Form Elemanı Seçimi için Dropdown -->
     <div class="form-group">
       <label for="formElementSelector">Form Elemanı Seçin</label>
-      <!-- Dropdown seçimi değiştiğinde addField metodunu tetikleyerek yeni alan ekle -->
       <select v-model="selectedField" @change="addField" class="form-control" id="formElementSelector">
         <option value="" disabled selected>Bir form elemanı seçin</option>
-        <!-- Tüm mevcut form alanlarını dropdown içinde göster -->
         <option v-for="(field, index) in availableFields" :value="field" :key="index">{{ field.form_field_type.type }}</option>
       </select>
     </div>
 
     <!-- Form -->
     <form @submit.prevent="handleSubmit">
-      <!-- formFields dizisindeki her bir alan için uygun Vue bileşenini oluştur -->
       <component
         v-for="(field, index) in formFields"
         :is="getComponent(field)"
@@ -23,11 +20,37 @@
       />
       <button type="submit" class="btn">Gönder</button>
     </form>
+
+    <!-- Form Elemanının Özelliklerini Düzenleme -->
+    <div v-if="selectedFormField">
+      <h3>Form Elemanı Özellikleri</h3>
+      <div class="form-group">
+        <label for="placeholder">Placeholder</label>
+        <input type="text" v-model="selectedFormField.placeholder" class="form-control" id="placeholder" />
+      </div>
+      <div class="form-group">
+        <label for="placeholder">Label</label>
+        <input type="text" v-model="selectedFormField.label" class="form-control" id="placeholder" />
+      </div>
+      <div class="form-group">
+        <label for="isRequired">Required</label>
+        <input type="checkbox" v-model="selectedFormField.is_required" class="form-control" id="isRequired" />
+      </div>
+      <div v-if="selectedFormField.form_field_type.type === 'selectbox' || selectedFormField.form_field_type.type === 'checkbox'" class="form-group">
+        <label for="options">Options</label>
+        <div v-for="(option, index) in selectedFormField.form_field_options" :key="index" class="form-group">
+          <input type="text" v-model="option.option_label" placeholder="Option Label" class="form-control" />
+          <input type="text" v-model="option.option_value" placeholder="Option Value" class="form-control" />
+          <button @click="removeOption(index)" class="btn btn-danger">Remove</button>
+        </div>
+        <button @click="addOption" class="btn btn-primary">Add Option</button>
+      </div>
+      <button @click="updateField" class="btn">Güncelle</button>
+    </div>
   </div>
 </template>
 
 <script>
-// Gerekli form bileşenlerini içeri aktar
 import TextInput from './TextInput.vue';
 import SelectBox from './SelectBox.vue';
 import CheckBox from './CheckBox.vue';
@@ -44,72 +67,68 @@ export default {
   },
   data() {
     return {
-      selectedField: null, // Kullanıcının seçtiği form elemanı
-      availableFields: [], // Mevcut form alanlarının listesi
-      formFields: [], // Formda gösterilecek alanların listesi
-      formData: {}, // Form verilerini tutar
+      selectedField: null,
+      selectedFormField: null,
+      availableFields: [],
+      formFields: [],
+      formData: {},
     };
   },
   async created() {
     try {
-      // form-field-types.json dosyasını fetch ile yükle
       const response = await fetch('/form-data.json');
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      // Mevcut form alanlarını availableFields değişkenine ata
       this.availableFields = await response.json();
-      console.log("created");
-      console.log("availableFields");
-      console.log(this.availableFields);
-      console.log("formFields");
-      console.log(this.formFields);
-      console.log("formData");
-      console.log(this.formData);
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error);
     }
   },
   methods: {
-    // Alan türüne göre uygun Vue bileşenini döndür
     getComponent(field) {
       switch (field.form_field_type.type) {
         case 'email':
         case 'number':
         case 'date':
-          return 'TextInput'; // TextInput bileşenini kullan
+          return 'TextInput';
         case 'selectbox':
-          return 'SelectBox'; // SelectBox bileşenini kullan
+          return 'SelectBox';
         case 'checkbox':
-          return 'CheckBox'; // CheckBox bileşenini kullan
+          return 'CheckBox';
         case 'radio':
-          return 'RadioButton'; // RadioButton bileşenini kullan
+          return 'RadioButton';
         case 'textarea':
-          return 'TextArea'; // TextArea bileşenini kullan
+          return 'TextArea';
         default:
-          return 'TextInput'; // Varsayılan olarak TextInput bileşenini kullan
+          return 'TextInput';
       }
     },
-    // Seçilen form elemanını formFields dizisine ekle
     addField() {
       if (this.selectedField) {
-        // Seçilen form elemanının kopyasını oluştur
         const newField = JSON.parse(JSON.stringify(this.selectedField));
-        // formFields dizisine yeni alanı ekle
         this.formFields.push(newField);
-        // formData nesnesine yeni alanı ekle ve varsayılan değeri boş string olarak ayarla
-        this.$set(this.formData, newField.unique_id, '');
-        // selectedField'ı null olarak ayarla, böylece dropdown sıfırlanır
+        this.$set(this.formData, newField.unique_id, newField.form_field_type.type === 'checkbox' ? [] : '');
         this.selectedField = null;
-      console.log("formFields");
-      console.log(this.formFields);
-      console.log("newField");
-      console.log(newField);
-      console.log("formData");
-      console.log(this.formData);
+        this.selectedFormField = newField;
       }
     },
-    // Form gönderildiğinde form verilerini konsola yazdır
+    updateField() {
+      const index = this.formFields.findIndex(field => field.unique_id === this.selectedFormField.unique_id);
+      if (index !== -1) {
+        this.$set(this.formFields, index, this.selectedFormField);
+      }
+    },
+    addOption() {
+      if (this.selectedFormField && this.selectedFormField.form_field_options) {
+        this.selectedFormField.form_field_options.push({ option_label: '', option_value: '' });
+      }
+    },
+    removeOption(index) {
+      if (this.selectedFormField && this.selectedFormField.form_field_options) {
+        this.selectedFormField.form_field_options.splice(index, 1);
+      }
+    },
     handleSubmit() {
       console.log(this.formData);
     },
@@ -118,11 +137,9 @@ export default {
 </script>
 
 <style scoped>
-/* Form grubu stili */
 .form-group {
   margin-bottom: 15px;
 }
-/* Form kontrolü stili */
 .form-control {
   display: block;
   width: 100%;
@@ -136,7 +153,6 @@ export default {
   border-radius: 4px;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
-/* Buton stili */
 .btn {
   display: inline-block;
   font-weight: 400;

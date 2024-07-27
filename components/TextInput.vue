@@ -2,7 +2,7 @@
     <div class="form-group">
       <label :for="field.form_field_type_id">{{ field.label }}</label>
       <input
-        :type="field.type"
+        :type="field.form_field_type.type"
         v-model="value"
         :id="field.form_field_type_id"
         :name="field.form_field_type_id"

@@ -1,48 +1,65 @@
 <template>
-    <div class="form-group">
-      <label :for="field.unique_id">{{ field.label }}</label>
+  <div class="form-group">
+    <label>{{ field.label }}</label>
+    <br>
+    <div v-for="(option, index) in field.form_field_options" :key="index" class="form-check">
       <input
         type="checkbox"
-        v-model="value"
-        :id="field.unique_id"
+        :id="`${field.unique_id}_${index}`"
         :name="field.unique_id"
-        :required="field.is_required"
-        class="form-control"
+        :value="option.option_value"
+        :checked="isChecked(option.option_value)"
+        @change="handleCheckboxChange(option.option_value, $event.target.checked)"
+        class="form-check-input"
       />
+      <label :for="`${field.unique_id}_${index}`" class="form-check-label">{{ option.option_label }}</label>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    props: {
-      field: {
-        type: Object,
-        required: true,
-      },
-      value: {
-        type: Boolean,
-        default: false,
-      },
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    field: {
+      type: Object,
+      required: true,
     },
-  };
-  </script>
-  
-  <style scoped>
-  .form-group {
-    margin-bottom: 15px;
-  }
-  .form-control {
-    display: block;
-    width: auto;
-    padding: 8px;
-    font-size: 14px;
-    line-height: 1.5;
-    color: #495057;
-    background-color: #fff;
-    background-clip: padding-box;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-  }
-  </style>
-    
+    value: {
+      type: Array,
+      default: () => [],
+    },
+  },
+  methods: {
+    isChecked(optionValue) {
+      return this.value.includes(optionValue);
+    },
+    handleCheckboxChange(optionValue, isChecked) {
+      const updatedValue = [...this.value];
+      if (isChecked) {
+        if (!updatedValue.includes(optionValue)) {
+          updatedValue.push(optionValue);
+        }
+      } else {
+        const index = updatedValue.indexOf(optionValue);
+        if (index !== -1) {
+          updatedValue.splice(index, 1);
+        }
+      }
+      this.$emit('input', updatedValue);
+    },
+  },
+};
+</script>
+
+<style scoped>
+.form-group {
+  margin-bottom: 15px;
+}
+.form-check {
+  display: inline-block;
+  margin-right: 10px;
+}
+.form-check-input {
+  margin-right: 5px;
+}
+</style>

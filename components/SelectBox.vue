@@ -1,5 +1,6 @@
 <template>
     <div class="">
+      <label>{{ field.label }}</label>
       <select
         v-model="value"
         :id="field.unique_id"
@@ -7,6 +8,10 @@
         :required="field.is_required"
         class="form-control"
       >
+      <option
+      value="" disabled selected hidden
+        >
+  Select Your Option        </option>
         <option
           v-for="(option, index) in field.form_field_options"
           :key="index"

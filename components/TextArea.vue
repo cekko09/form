@@ -5,6 +5,7 @@
         :id="field.unique_id"
         :name="field.unique_id"
         :required="field.is_required"
+       :placeholder="field.placeholder || ''"
         class="form-control"
       > </textarea>
     </div>

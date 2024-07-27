@@ -3,7 +3,7 @@
       <label>{{ field.label }}</label>
       <div v-for="(option, index) in field" :key="index" class="form-check">
         <input
-          :type="field.type"
+          :type="field.form_field_type.type"
           v-model="value"
           :id="`${field.form_field_type_id}-${index}`"
           :name="field.form_field_type_id"
