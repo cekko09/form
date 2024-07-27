@@ -11,13 +11,15 @@
 
     <!-- Form -->
     <form @submit.prevent="handleSubmit">
-      <component
-        v-for="(field, index) in formFields"
-        :is="getComponent(field)"
-        :key="index"
-        :field="field"
-        v-model="formData[field.unique_id]"
-      />
+      <div v-for="(field, index) in formFields" :key="index" class="form-field-container">
+        <component
+          :is="getComponent(field)"
+          :field="field"
+          v-model="formData[field.unique_id]"
+          @click="selectField(field)"
+        />
+        <button @click="removeField(index, field)" class="btn btn-danger">Kapat</button>
+      </div>
       <button type="submit" class="btn">Gönder</button>
     </form>
 
@@ -29,14 +31,14 @@
         <input type="text" v-model="selectedFormField.placeholder" class="form-control" id="placeholder" />
       </div>
       <div class="form-group">
-        <label for="placeholder">Label</label>
-        <input type="text" v-model="selectedFormField.label" class="form-control" id="placeholder" />
+        <label for="label">Label</label>
+        <input type="text" v-model="selectedFormField.label" class="form-control" id="label" />
       </div>
       <div class="form-group">
         <label for="isRequired">Required</label>
         <input type="checkbox" v-model="selectedFormField.is_required" class="form-control" id="isRequired" />
       </div>
-      <div v-if="selectedFormField.form_field_type.type === 'selectbox' || selectedFormField.form_field_type.type === 'checkbox'" class="form-group">
+      <div v-if="selectedFormField.form_field_type.type === 'selectbox' || selectedFormField.form_field_type.type === 'checkbox' || selectedFormField.form_field_type.type === 'radio'" class="form-group">
         <label for="options">Options</label>
         <div v-for="(option, index) in selectedFormField.form_field_options" :key="index" class="form-group">
           <input type="text" v-model="option.option_label" placeholder="Option Label" class="form-control" />
@@ -113,6 +115,12 @@ export default {
         this.selectedFormField = newField;
       }
     },
+    removeField(index, field) {
+      this.formFields.splice(index, 1);
+      if (this.selectedFormField && this.selectedFormField.unique_id === field.unique_id) {
+        this.selectedFormField = null;
+      }
+    },
     updateField() {
       const index = this.formFields.findIndex(field => field.unique_id === this.selectedFormField.unique_id);
       if (index !== -1) {
@@ -131,6 +139,9 @@ export default {
     },
     handleSubmit() {
       console.log(this.formData);
+    },
+    selectField(field) {
+      this.selectedFormField = field;
     },
   },
 };
@@ -169,5 +180,13 @@ export default {
   color: white;
   text-decoration: none;
   margin-top: 10px;
+}
+.form-field-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.form-field-container .btn {
+  margin-left: 10px;
 }
 </style>
