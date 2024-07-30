@@ -1,42 +1,32 @@
 <template>
-  <div>
+  <div class="container">
     <!-- Form Elemanı Seçimi için Dropdown -->
     <div class="form-group">
       <label for="formElementSelector">Form Elemanı Seçin</label>
       <select v-model="selectedField" @change="addField" class="form-control" id="formElementSelector">
         <option value="" disabled selected>Bir form elemanı seçin</option>
-        <option v-for="(field, index) in availableFields" :value="field" :key="index">{{ field.form_field_type.type }}</option>
+        <option v-for="(field, index) in availableFields" :value="field" :key="index">{{ field.form_field_type.detail }}</option>
       </select>
     </div>
 
-    <!-- Form -->
-    <form @submit.prevent="handleSubmit">
-      <div v-for="(field, index) in formFields" :key="index" class="form-field-container">
-        <component
-          :is="getComponent(field)"
-          :field="field"
-          v-model="formData[field.unique_id]"
-          @click="selectField(field)"
-        />
-        <button @click="removeField(index, field)" class="btn btn-danger">Kapat</button>
-      </div>
-      <button type="submit" class="btn">Gönder</button>
-    </form>
-
-    <!-- Form Elemanının Özelliklerini Düzenleme -->
-    <div v-if="selectedFormField">
-      <h3>Form Elemanı Özellikleri</h3>
-      <div class="form-group">
-        <label for="placeholder">Placeholder</label>
-        <input type="text" v-model="selectedFormField.placeholder" class="form-control" id="placeholder" />
-      </div>
+    <div class="row">
+      <div class="col-md-3 form_settings" v-if="selectedFormField">
+        <div >
+      <p>Form Elemanı Özellikleri</p>
+      
       <div class="form-group">
         <label for="label">Label</label>
         <input type="text" v-model="selectedFormField.label" class="form-control" id="label" />
       </div>
       <div class="form-group">
         <label for="isRequired">Required</label>
-        <input type="checkbox" v-model="selectedFormField.is_required" class="form-control" id="isRequired" />
+        <input type="checkbox" v-model="selectedFormField.is_required"  id="isRequired" />
+      </div>
+      <div v-if="showPlaceholder">
+        <div class="form-group">
+          <label for="placeholder">Placeholder</label>
+          <input type="text" v-model="selectedFormField.placeholder" class="form-control" id="placeholder" />
+        </div>
       </div>
       <div v-if="selectedFormField.form_field_type.type === 'selectbox' || selectedFormField.form_field_type.type === 'checkbox' || selectedFormField.form_field_type.type === 'radio'" class="form-group">
         <label for="options">Options</label>
@@ -49,6 +39,28 @@
       </div>
       <button @click="updateField" class="btn">Güncelle</button>
     </div>
+      </div>
+      <div class="col-md-9">
+        <form @submit.prevent="handleSubmit">
+      <div v-for="(field, index) in formFields" :key="index" class="form-field-container">
+        <component
+          :is="getComponent(field)"
+          :field="field"
+          v-model="formData[field.unique_id]"
+          @click="selectField(field)"
+        />
+        <button type="button" @click="removeField(index, field)" class="btn btn-danger">Kapat</button>
+        <button type="button" @click="editField(field)" class="btn btn-primary">Düzenle</button>
+      </div>
+      <button type="submit" class="btn">Gönder</button>
+    </form>
+      </div>
+    </div>
+    <!-- Form -->
+  
+
+    <!-- Form Elemanının Özelliklerini Düzenleme -->
+   
   </div>
 </template>
 
@@ -58,6 +70,7 @@ import SelectBox from './SelectBox.vue';
 import CheckBox from './CheckBox.vue';
 import RadioButton from './RadioButton.vue';
 import TextArea from './TextArea.vue';
+import Rating from './Rating.vue';
 
 export default {
   components: {
@@ -66,6 +79,7 @@ export default {
     CheckBox,
     RadioButton,
     TextArea,
+    Rating,
   },
   data() {
     return {
@@ -102,6 +116,8 @@ export default {
           return 'RadioButton';
         case 'textarea':
           return 'TextArea';
+        case 'rating':
+          return 'Rating';
         default:
           return 'TextInput';
       }
@@ -109,8 +125,12 @@ export default {
     addField() {
       if (this.selectedField) {
         const newField = JSON.parse(JSON.stringify(this.selectedField));
+        if (newField.form_field_type.type === 'rating') {
+          this.$set(this.formData, newField.unique_id, 0);  // Ensure numeric default value
+        } else {
+          this.$set(this.formData, newField.unique_id, newField.form_field_type.type === 'checkbox' ? [] : '');
+        }
         this.formFields.push(newField);
-        this.$set(this.formData, newField.unique_id, newField.form_field_type.type === 'checkbox' ? [] : '');
         this.selectedField = null;
         this.selectedFormField = newField;
       }
@@ -120,6 +140,9 @@ export default {
       if (this.selectedFormField && this.selectedFormField.unique_id === field.unique_id) {
         this.selectedFormField = null;
       }
+    },
+    editField(field) {
+      this.selectedFormField = field;
     },
     updateField() {
       const index = this.formFields.findIndex(field => field.unique_id === this.selectedFormField.unique_id);
@@ -144,6 +167,11 @@ export default {
       this.selectedFormField = field;
     },
   },
+  computed: {
+    showPlaceholder() {
+      return this.selectedFormField && this.selectedFormField.form_field_type.type !== 'rating' && this.selectedFormField.form_field_type.type !== 'checkbox' && this.selectedFormField.form_field_type.type !== 'date' && this.selectedFormField.form_field_type.type !== 'radio';
+    }
+  }
 };
 </script>
 
@@ -182,11 +210,17 @@ export default {
   margin-top: 10px;
 }
 .form-field-container {
-  display: flex;
-  align-items: center;
+ 
   margin-bottom: 10px;
 }
 .form-field-container .btn {
   margin-left: 10px;
+}
+.form_settings {
+  border-right: 1px solid black;
+}
+.btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
 }
 </style>

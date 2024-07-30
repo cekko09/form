@@ -9,6 +9,7 @@
         :name="field.unique_id"
         :value="option.option_value"
         :checked="isChecked(option.option_value)"
+         :required="field.is_required"
         @change="handleCheckboxChange(option.option_value, $event.target.checked)"
         class="form-check-input"
       />

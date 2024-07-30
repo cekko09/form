@@ -250,7 +250,7 @@
   {
     "form_field_id": 8483,
     "form_id": 1038,
-    "label": "Dacepicker",
+    "label": "Datepicker",
     "placeholder": null,
     "field_type_id": 6,
     "default_value": null,
@@ -302,7 +302,7 @@
     "attributes": null,
     "form_field_type": {
       "form_field_type_id": 8,
-      "type": "phone",
+      "type": "number",
       "created_at": "2018-09-06 14:57:09",
       "updated_at": "2021-05-07 11:44:29",
       "detail": "Mobile Phone",
