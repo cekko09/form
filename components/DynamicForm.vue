@@ -1,66 +1,68 @@
 <template>
   <div class="container">
-    <!-- Form Elemanı Seçimi için Dropdown -->
-    <div class="form-group">
-      <label for="formElementSelector">Form Elemanı Seçin</label>
-      <select v-model="selectedField" @change="addField" class="form-control" id="formElementSelector">
-        <option value="" disabled selected>Bir form elemanı seçin</option>
-        <option v-for="(field, index) in availableFields" :value="field" :key="index">{{ field.form_field_type.detail }}</option>
-      </select>
-    </div>
+    <!-- Eğer form gönderilmemişse, form elemanı seçimini göster -->
+    <div v-if="!isSubmitted">
+      <div class="form-group">
+        <label for="formElementSelector">Form Elemanı Seçin</label>
+        <select v-model="selectedField" @change="addField" class="form-control" id="formElementSelector">
+          <option value="" disabled selected>Bir form elemanı seçin</option>
+          <option v-for="(field, index) in availableFields" :value="field" :key="index">{{ field.form_field_type.detail }}</option>
+        </select>
+      </div>
 
-    <div class="row">
-      <div class="col-md-3 form_settings" v-if="selectedFormField">
-        <div >
-      <p>Form Elemanı Özellikleri</p>
-      
-      <div class="form-group">
-        <label for="label">Label</label>
-        <input type="text" v-model="selectedFormField.label" class="form-control" id="label" />
-      </div>
-      <div class="form-group">
-        <label for="isRequired">Required</label>
-        <input type="checkbox" v-model="selectedFormField.is_required"  id="isRequired" />
-      </div>
-      <div v-if="showPlaceholder">
-        <div class="form-group">
-          <label for="placeholder">Placeholder</label>
-          <input type="text" v-model="selectedFormField.placeholder" class="form-control" id="placeholder" />
+      <div class="row">
+        <div class="col-md-3 form_settings" v-if="selectedFormField">
+          <div>
+            <p>Form Elemanı Özellikleri</p>
+
+            <div class="form-group">
+              <label for="label">Label</label>
+              <input type="text" v-model="selectedFormField.label" class="form-control" id="label" />
+            </div>
+            <div class="form-group">
+              <label for="isRequired">Required</label>
+              <input type="checkbox" v-model="selectedFormField.is_required" id="isRequired" />
+            </div>
+            <div v-if="showPlaceholder">
+              <div class="form-group">
+                <label for="placeholder">Placeholder</label>
+                <input type="text" v-model="selectedFormField.placeholder" class="form-control" id="placeholder" />
+              </div>
+            </div>
+            <div v-if="selectedFormField.form_field_type.type === 'selectbox' || selectedFormField.form_field_type.type === 'checkbox' || selectedFormField.form_field_type.type === 'radio'" class="form-group">
+              <label for="options">Options</label>
+              <div v-for="(option, index) in selectedFormField.form_field_options" :key="index" class="form-group">
+                <input type="text" v-model="option.option_label" placeholder="Option Label" class="form-control" />
+                <input type="text" v-model="option.option_value" placeholder="Option Value" class="form-control" />
+                <button @click="removeOption(index)" class="btn btn-danger">Remove</button>
+              </div>
+              <button @click="addOption" class="btn btn-primary">Add Option</button>
+            </div>
+            <button @click="updateField" class="btn">Güncelle</button>
+          </div>
+        </div>
+        <div class="col-md-9">
+          <form @submit.prevent="handleSubmit">
+            <div v-for="(field, index) in formFields" :key="index" class="form-field-container">
+              <component
+                :is="getComponent(field)"
+                :field="field"
+                v-model="formData[field.unique_id]"
+                @click="selectField(field)"
+              />
+              <button type="button" @click="removeField(index, field)" class="btn btn-danger">Kapat</button>
+              <button type="button" @click="editField(field)" class="btn btn-primary">Düzenle</button>
+            </div>
+            <button type="submit" class="btn">Oluştur</button>
+          </form>
         </div>
       </div>
-      <div v-if="selectedFormField.form_field_type.type === 'selectbox' || selectedFormField.form_field_type.type === 'checkbox' || selectedFormField.form_field_type.type === 'radio'" class="form-group">
-        <label for="options">Options</label>
-        <div v-for="(option, index) in selectedFormField.form_field_options" :key="index" class="form-group">
-          <input type="text" v-model="option.option_label" placeholder="Option Label" class="form-control" />
-          <input type="text" v-model="option.option_value" placeholder="Option Value" class="form-control" />
-          <button @click="removeOption(index)" class="btn btn-danger">Remove</button>
-        </div>
-        <button @click="addOption" class="btn btn-primary">Add Option</button>
-      </div>
-      <button @click="updateField" class="btn">Güncelle</button>
     </div>
-      </div>
-      <div class="col-md-9">
-        <form @submit.prevent="handleSubmit">
-      <div v-for="(field, index) in formFields" :key="index" class="form-field-container">
-        <component
-          :is="getComponent(field)"
-          :field="field"
-          v-model="formData[field.unique_id]"
-          @click="selectField(field)"
-        />
-        <button type="button" @click="removeField(index, field)" class="btn btn-danger">Kapat</button>
-        <button type="button" @click="editField(field)" class="btn btn-primary">Düzenle</button>
-      </div>
-      <button type="submit" class="btn">Gönder</button>
-    </form>
-      </div>
-    </div>
-    <!-- Form -->
-  
 
-    <!-- Form Elemanının Özelliklerini Düzenleme -->
-   
+    <!-- Eğer form gönderildiyse, CreatedForm bileşenini göster -->
+    <div v-else>
+      <CreatedForm :formFields="formFields" :formData="formData" />
+    </div>
   </div>
 </template>
 
@@ -71,7 +73,7 @@ import CheckBox from './CheckBox.vue';
 import RadioButton from './RadioButton.vue';
 import TextArea from './TextArea.vue';
 import Rating from './Rating.vue';
-
+import CreatedForm from './CreatedForm.vue';
 export default {
   components: {
     TextInput,
@@ -80,6 +82,7 @@ export default {
     RadioButton,
     TextArea,
     Rating,
+    CreatedForm, 
   },
   data() {
     return {
@@ -88,6 +91,7 @@ export default {
       availableFields: [],
       formFields: [],
       formData: {},
+      isSubmitted: false, 
     };
   },
   async created() {
@@ -161,7 +165,7 @@ export default {
       }
     },
     handleSubmit() {
-      console.log(this.formData);
+      this.isSubmitted = true;
     },
     selectField(field) {
       this.selectedFormField = field;
@@ -210,7 +214,6 @@ export default {
   margin-top: 10px;
 }
 .form-field-container {
- 
   margin-bottom: 10px;
 }
 .form-field-container .btn {
