@@ -33,7 +33,6 @@
               <label for="options">Options</label>
               <div v-for="(option, index) in selectedFormField.form_field_options" :key="index" class="form-group">
                 <input type="text" v-model="option.option_label" placeholder="Option Label" class="form-control" />
-                <input type="text" v-model="option.option_value" placeholder="Option Value" class="form-control" />
                 <button @click="removeOption(index)" class="btn btn-danger">Remove</button>
               </div>
               <button @click="addOption" class="btn btn-primary">Add Option</button>
@@ -42,7 +41,7 @@
           </div>
         </div>
         <div class="col-md-9">
-          <form @submit.prevent="handleSubmit">
+          <form >
             <div v-for="(field, index) in formFields" :key="index" class="form-field-container">
               <component
                 :is="getComponent(field)"
@@ -53,7 +52,7 @@
               <button type="button" @click="removeField(index, field)" class="btn btn-danger">Kapat</button>
               <button type="button" @click="editField(field)" class="btn btn-primary">Düzenle</button>
             </div>
-            <button type="submit" class="btn">Oluştur</button>
+            <button type="button" @click="handleSubmit" class="btn">Oluştur</button>
           </form>
         </div>
       </div>

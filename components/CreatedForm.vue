@@ -1,6 +1,6 @@
 <template>
     <div>
-      <form @submit.prevent="handleFinalSubmit">
+      <form  class="m-auto" @submit.prevent="handleFinalSubmit">
         <div v-for="(field, index) in formFields" :key="index" class="form-field-container">
           <component
             :is="getComponent(field)"
@@ -69,6 +69,9 @@
   </script>
   
   <style scoped>
+  form {
+    max-width: 600px;
+  }
   .form-group {
     margin-bottom: 15px;
   }
