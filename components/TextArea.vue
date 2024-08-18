@@ -4,6 +4,8 @@
       <textarea
         :id="field.unique_id"
         :name="field.unique_id"
+        :value="inputValue"
+    @input="$emit('input', $event.target.value)"
         :required="field.is_required"
        :placeholder="field.placeholder || ''"
         class="form-control"
@@ -23,6 +25,11 @@
         default: '',
       },
     },
+    data() {
+      return {
+        inputValue: this.value,
+      };
+    }
   };
   </script>
   

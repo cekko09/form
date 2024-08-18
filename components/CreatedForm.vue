@@ -1,7 +1,7 @@
 <template>
   <div>
-    <form class="m-auto" @submit.prevent="handleFinalSubmit">
-      <div v-if="currentStep < formFields.length">
+    <form class="m-auto" onkeydown="return event.key != 'Enter';" @submit.prevent="handleFinalSubmit">
+      <div v-if="currentStep < formFields.length ">
         <component
           :is="getComponent(currentField)"
           :field="currentField"
@@ -9,12 +9,14 @@
         />
         <div class="button-container">
           <button type="button" class="btn" @click="prevStep" v-if="currentStep > 0">Geri</button>
-          <button type="button" class="btn" @click="nextStep" v-if="currentStep < formFields.length - 1">İleri</button>
-          <button type="submit" class="btn" v-if="currentStep === formFields.length - 1">Gönder</button>
+          <button type="button" class="btn" @click="nextStep" v-show="currentStep < formFields.length - 1">İleri</button>
+          <button type="submit" class="btn" v-show="currentStep === formFields.length - 1" >Gönder</button>
         </div>
       </div>
       <div v-else>
-        <p>Formunuz gönderildi!</p>
+          <li v-for="(value, key) in formData" :key="key">
+        {{ key }}: {{ value }}
+      </li>
       </div>
     </form>
   </div>
@@ -79,9 +81,22 @@ export default {
       }
     },
     nextStep() {
-      if (this.currentStep < this.formFields.length - 1) {
-        this.currentStep++;
+      const currentField = this.formFields[this.currentStep];
+      
+      if (currentField.is_required && currentField.form_field_options.option_value != '' && this.formData[currentField.unique_id] == '' || currentField.is_required &&  !this.formData[currentField.unique_id] && currentField.form_field_options.option_value != '' ){
+        this.errorMessage = `${currentField.label} alanı doldurulmalıdır.`;
+        alert(this.errorMessage);
+      } else {
+        this.errorMessage = '';
+        if (this.currentStep < this.formFields.length - 1) {
+          this.currentStep++;
+        }
       }
+    },
+    GoToGoogle() {
+      setTimeout(() => {
+        window.location.href = 'https://google.com';
+      }, 2000);
     },
     prevStep() {
       if (this.currentStep > 0) {
@@ -89,8 +104,15 @@ export default {
       }
     },
     handleFinalSubmit() {
-      console.log(this.formData);
-      this.currentStep++;
+      const currentField = this.formFields[this.currentStep];
+      
+      if (currentField.is_required && currentField.form_field_options.option_value != '' && this.formData[currentField.unique_id] == '' || currentField.is_required &&  !this.formData[currentField.unique_id] && currentField.form_field_options.option_value != '' ){
+        this.errorMessage = `${currentField.label} alanı doldurulmalıdır.`;
+        alert(this.errorMessage);
+      } else {
+        this.errorMessage = '';
+          this.currentStep++;
+      }
     },
   },
   created() {

@@ -9,7 +9,7 @@
         :name="field.unique_id"
         :value="option.option_value"
         :checked="isChecked(option.option_value)"
-         :required="field.is_required"
+        :required="field.is_required"
         @change="handleCheckboxChange(option.option_value, $event.target.checked)"
         class="form-check-input"
       />
@@ -35,16 +35,13 @@ export default {
       return this.value.includes(optionValue);
     },
     handleCheckboxChange(optionValue, isChecked) {
-      const updatedValue = [...this.value];
+      let updatedValue = [...this.value];
       if (isChecked) {
         if (!updatedValue.includes(optionValue)) {
           updatedValue.push(optionValue);
         }
       } else {
-        const index = updatedValue.indexOf(optionValue);
-        if (index !== -1) {
-          updatedValue.splice(index, 1);
-        }
+        updatedValue = updatedValue.filter(val => val !== optionValue);
       }
       this.$emit('input', updatedValue);
     },

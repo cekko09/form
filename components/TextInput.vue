@@ -3,7 +3,8 @@
       <label :for="field.form_field_type_id">{{ field.label }}</label>
       <input
         :type="field.form_field_type.type"
-        v-model="value"
+        :value="inputValue"
+    @input="$emit('input', $event.target.value)"
         :id="field.form_field_type_id"
         :name="field.form_field_type_id"
         :placeholder="field.placeholder || ''"
@@ -25,6 +26,12 @@
         default: '',
       },
     },
+
+    data() {
+      return {
+        inputValue: this.value,
+      };
+    }
   };
   </script>
   

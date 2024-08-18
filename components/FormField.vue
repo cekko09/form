@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <div class="form-group">
       <label :for="field.form_field_type_id">{{ field.label }}</label>
       <component
@@ -89,4 +89,4 @@
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   }
   </style>
-  
+   -->

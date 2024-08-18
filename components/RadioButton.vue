@@ -7,7 +7,7 @@
         :id="`${field.unique_id}_${index}`"
         :name="field.unique_id"
         :value="option.option_value"
-        v-model="value"
+    @input="$emit('input', $event.target.value)"
         :required="field.is_required"
         class="form-check-input"
       />
@@ -30,6 +30,11 @@ export default {
       default: '',
     },
   },
+  data() {
+      return {
+        inputValue: this.value,
+      };
+    }
 };
 </script>
 

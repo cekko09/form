@@ -2,7 +2,8 @@
     <div class="">
       <label>{{ field.label }}</label>
       <select
-        v-model="value"
+        :value="inputValue"
+    @input="$emit('input', $event.target.value)"
         :id="field.unique_id"
         :name="field.unique_id"
         :required="field.is_required"
@@ -35,6 +36,11 @@
         default: '',
       },
     },
+    data() {
+      return {
+        inputValue: this.value,
+      };
+    }
   };
   </script>
   
