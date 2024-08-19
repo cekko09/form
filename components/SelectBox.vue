@@ -6,7 +6,7 @@
     @input="$emit('input', $event.target.value)"
         :id="field.unique_id"
         :name="field.unique_id"
-        :required="field.is_required"
+        
         class="form-control"
       >
       <option

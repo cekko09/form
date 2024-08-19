@@ -46,6 +46,7 @@
               <component
                 :is="getComponent(field)"
                 :field="field"
+                v-if="!field.is_hidden"
                 v-model="formData[field.unique_id]"
                 @click="selectField(field)"
               />
@@ -107,11 +108,9 @@ export default {
   methods: {
     getComponent(field) {
       switch (field.form_field_type.type) {
-        case 'email':
-        case 'number':
-        case 'date':
-          return 'TextInput';
-        case 'selectbox':
+       
+        case 'salutation':
+        case 'selectbox': 
           return 'SelectBox';
         case 'checkbox':
           return 'CheckBox';
@@ -121,6 +120,7 @@ export default {
           return 'TextArea';
         case 'rating':
           return 'Rating';
+          
         default:
           return 'TextInput';
       }
@@ -145,7 +145,7 @@ export default {
       }
     },
     editField(field) {
-      this.selectedFormField = field;
+      this.selectedFormField = {...field};
     },
     updateField() {
       const index = this.formFields.findIndex(field => field.unique_id === this.selectedFormField.unique_id);

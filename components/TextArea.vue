@@ -6,7 +6,7 @@
         :name="field.unique_id"
         :value="inputValue"
     @input="$emit('input', $event.target.value)"
-        :required="field.is_required"
+        
        :placeholder="field.placeholder || ''"
         class="form-control"
       > </textarea>

@@ -5,6 +5,7 @@
         <component
           :is="getComponent(currentField)"
           :field="currentField"
+          v-if="!currentField.is_hidden"
           v-model="formData[currentField.unique_id]"
         />
         <div class="button-container">
@@ -62,11 +63,9 @@ export default {
   methods: {
     getComponent(field) {
       switch (field.form_field_type.type) {
-        case 'email':
-        case 'number':
-        case 'date':
-          return 'TextInput';
+      
         case 'selectbox':
+        case 'salutation':
           return 'SelectBox';
         case 'checkbox':
           return 'CheckBox';

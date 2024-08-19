@@ -8,7 +8,7 @@
         :name="field.unique_id"
         :value="option.option_value"
     @input="$emit('input', $event.target.value)"
-        :required="field.is_required"
+       
         class="form-check-input"
       />
       <label :for="`${field.unique_id}_${index}`" class="form-check-label">

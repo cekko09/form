@@ -8,7 +8,8 @@
         :id="field.form_field_type_id"
         :name="field.form_field_type_id"
         :placeholder="field.placeholder || ''"
-        :required="field.is_required"
+        
+        
         class="form-control"
       />
     </div>
