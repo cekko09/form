@@ -1,0 +1,64 @@
+{
+  "total_count": 1,
+  "form_id": 1039,
+  "company_id": 327,
+  "branch_id": 256,
+  "name": "Cenk betül",
+  "created_by": null,
+  "created_at": "2024-08-15 13:18:24",
+  "updated_at": "2024-08-20 11:49:53",
+  "success_message": "Formu doldurdugunuz icin tesekkur ederiz. Biz sizi arariz",
+  "redirect_url": "https://lifesycle.co.uk",
+  "unique_id": "d02zMlhaiw",
+  "description": null,
+  "form_background_image": null,
+  "page_background_image": null,
+  "form_type_id": null,
+  "options": {
+    "page": {
+      "page_title": "CenkBetul",
+      "page_description": "Cenk'in ve Betul'un formudur"
+    },
+    "notify_contact": {
+      "sms_text": null,
+      "mail_template_id": "null"
+    },
+    "welcome_message": {
+      "title": "Welcome!!!",
+      "is_default": true,
+      "description": "Welcome to our form!"
+    }
+  },
+  "logo": "https://lifesycle-cdn-develop.s3.eu-west-2.amazonaws.com/230c70e2-b1ce-4e0f-a737-19b40c4142a6/company_default_form_logo/n6TLutZ16IvnyJytwt8WwssO0NQOqDBxnToFpLnJ.png",
+  "contact_profiles": [
+    "2"
+  ],
+  "activity_id": 5,
+  "notify_user_type_id": 3,
+  "notify_user_id": [
+    "360"
+  ],
+  "settings": null,
+  "is_custom": false,
+  "tags": null,
+  "custom_script": null,
+  "update_contact_profile": false,
+  "form_colors": {
+    "primary_color": "#d60000",
+    "tertiary_color": "#db2f71",
+    "secondary_color": "#ffffff"
+  },
+  "default_settings": {
+    "company_form_settings_logo": "230c70e2-b1ce-4e0f-a737-19b40c4142a6/company_default_form_logo/n6TLutZ16IvnyJytwt8WwssO0NQOqDBxnToFpLnJ.png",
+    "company_form_settings_primary_color": "#d60000",
+    "company_form_settings_secondary_color": "#ffffff",
+    "company_form_settings_tertiary_color": "#db2f71",
+    "company_form_settings_welcome_message": {
+      "description": "Welcome to our form!",
+      "title": "Welcome!!!"
+    },
+    "company_form_settings_success_message": "Heyyoooogg formu doldurdunuz ya lagn",
+    "company_form_settings_redirect_url": "https://lifesycle.co.uk"
+  },
+  "form_presentation_url": "https://oakwoodhomes.presentation.test-aws.lifesycle.co.uk/form/d02zMlhaiw"
+}

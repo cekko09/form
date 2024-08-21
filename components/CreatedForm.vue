@@ -1,23 +1,20 @@
 <template>
   <div>
-    <form class="m-auto" onkeydown="return event.key != 'Enter';" @submit.prevent="handleFinalSubmit">
-      <div v-if="currentStep < formFields.length ">
+    <form class="m-auto" @submit.prevent="handleFinalSubmit">
+      <div v-if="currentStep < formFields.length">
         <component
           :is="getComponent(currentField)"
           :field="currentField"
-          v-if="!currentField.is_hidden"
           v-model="formData[currentField.unique_id]"
         />
         <div class="button-container">
-          <button type="button" class="btn" @click="prevStep" v-if="currentStep > 0">Geri</button>
-          <button type="button" class="btn" @click="nextStep" v-show="currentStep < formFields.length - 1">İleri</button>
-          <button type="submit" class="btn" v-show="currentStep === formFields.length - 1" >Gönder</button>
+          <button :style="{ backgroundColor: primaryColor, borderColor: primaryColor }"  type="button" class="btn" @click="prevStep" v-if="currentStep > 0">Geri</button>
+          <button :style="{ backgroundColor: primaryColor, borderColor: primaryColor }"  type="button" class="btn" @click="nextStep" v-if="currentStep < formFields.length - 1">İleri</button>
+          <button :style="{ backgroundColor: primaryColor, borderColor: primaryColor }"  type="submit" class="btn" v-if="currentStep === formFields.length - 1">Gönder</button>
         </div>
       </div>
       <div v-else>
-          <li v-for="(value, key) in formData" :key="key">
-        {{ key }}: {{ value }}
-      </li>
+        <p>Formunuz gönderildi!</p>
       </div>
     </form>
   </div>
@@ -55,6 +52,25 @@ export default {
       currentStep: 0,
     };
   },
+  async created() {
+    try {
+      const settingsResponse = await fetch('/form_settings.json');
+      if (!settingsResponse.ok) {
+        throw new Error('Settings data network response was not ok');
+      }
+      const settings = await settingsResponse.json();
+
+      this.primaryColor = settings.form_colors.primary_color || settings.default_settings.company_form_settings_primary_color;
+      this.secondaryColor = settings.form_colors.secondary_color || settings.default_settings.company_form_settings_secondary_color;
+      this.tertiaryColor = settings.form_colors.tertiary_color || settings.default_settings.company_form_settings_tertiary_color;
+     
+  
+
+    } catch (error) {
+      console.error('There was a problem with the fetch operation:', error);
+    }
+  },
+
   computed: {
     currentField() {
       return this.formFields[this.currentStep];
@@ -63,9 +79,11 @@ export default {
   methods: {
     getComponent(field) {
       switch (field.form_field_type.type) {
-      
+        case 'email':
+        case 'number':
+        case 'date':
+          return 'TextInput';
         case 'selectbox':
-        case 'salutation':
           return 'SelectBox';
         case 'checkbox':
           return 'CheckBox';
@@ -80,22 +98,9 @@ export default {
       }
     },
     nextStep() {
-      const currentField = this.formFields[this.currentStep];
-      
-      if (currentField.is_required && currentField.form_field_options.option_value != '' && this.formData[currentField.unique_id] == '' || currentField.is_required &&  !this.formData[currentField.unique_id] && currentField.form_field_options.option_value != '' ){
-        this.errorMessage = `${currentField.label} alanı doldurulmalıdır.`;
-        alert(this.errorMessage);
-      } else {
-        this.errorMessage = '';
-        if (this.currentStep < this.formFields.length - 1) {
-          this.currentStep++;
-        }
+      if (this.currentStep < this.formFields.length - 1) {
+        this.currentStep++;
       }
-    },
-    GoToGoogle() {
-      setTimeout(() => {
-        window.location.href = 'https://google.com';
-      }, 2000);
     },
     prevStep() {
       if (this.currentStep > 0) {
@@ -103,24 +108,10 @@ export default {
       }
     },
     handleFinalSubmit() {
-      const currentField = this.formFields[this.currentStep];
-      
-      if (currentField.is_required && currentField.form_field_options.option_value != '' && this.formData[currentField.unique_id] == '' || currentField.is_required &&  !this.formData[currentField.unique_id] && currentField.form_field_options.option_value != '' ){
-        this.errorMessage = `${currentField.label} alanı doldurulmalıdır.`;
-        alert(this.errorMessage);
-      } else {
-        this.errorMessage = '';
-          this.currentStep++;
-      }
+      console.log(this.formData);
+      this.currentStep++;
     },
   },
-  created() {
-    this.formFields.forEach(field => {
-      // Varsayılan değeri formData'ya ekle
-      this.$set(this.formData, field.unique_id, field.default_value || 
-        (field.form_field_type.type === 'checkbox' ? [] : ''));
-    });
-  }
 };
 </script>
 
@@ -151,8 +142,6 @@ form {
   text-align: center;
   vertical-align: middle;
   cursor: pointer;
-  background-color: #007bff;
-  border: 1px solid #007bff;
   padding: 10px 20px;
   font-size: 16px;
   line-height: 1.5;

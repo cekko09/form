@@ -33,11 +33,11 @@
               <label for="options">Options</label>
               <div v-for="(option, index) in selectedFormField.form_field_options" :key="index" class="form-group">
                 <input type="text" v-model="option.option_label" placeholder="Option Label" class="form-control" />
-                <button @click="removeOption(index)" class="btn btn-danger">Remove</button>
+                <button  :style="{ backgroundColor: primaryColor, borderColor: primaryColor }" @click="removeOption(index)" class="btn ">Remove</button>
               </div>
-              <button @click="addOption" class="btn btn-primary">Add Option</button>
+              <button  :style="{ backgroundColor: primaryColor, borderColor: primaryColor }" @click="addOption" class="btn ">Add Option</button>
             </div>
-            <button @click="updateField" class="btn">Güncelle</button>
+            <button  :style="{ backgroundColor: primaryColor, borderColor: primaryColor }" @click="updateField" class="btn">Güncelle</button>
           </div>
         </div>
         <div class="col-md-9">
@@ -50,10 +50,10 @@
                 v-model="formData[field.unique_id]"
                 @click="selectField(field)"
               />
-              <button type="button" @click="removeField(index, field)" class="btn btn-danger">Kapat</button>
-              <button type="button" @click="editField(field)" class="btn btn-primary">Düzenle</button>
+              <button  :style="{ backgroundColor: primaryColor, borderColor: primaryColor }" type="button" @click="removeField(index, field)" class="btn ">Kapat</button>
+              <button  :style="{ backgroundColor: primaryColor, borderColor: primaryColor }" type="button" @click="editField(field)" class="btn ">Düzenle</button>
             </div>
-            <button type="button" @click="handleSubmit" class="btn">Oluştur</button>
+            <button  :style="{ backgroundColor: primaryColor, borderColor: primaryColor }" type="button" @click="handleSubmit" class="btn">Oluştur</button>
           </form>
         </div>
       </div>
@@ -202,8 +202,7 @@ export default {
   text-align: center;
   vertical-align: middle;
   cursor: pointer;
-  background-color: #007bff;
-  border: 1px solid #007bff;
+  background-color: blue;
   padding: 10px 20px;
   font-size: 16px;
   line-height: 1.5;
@@ -221,8 +220,5 @@ export default {
 .form_settings {
   border-right: 1px solid black;
 }
-.btn-danger {
-  background-color: #dc3545;
-  border-color: #dc3545;
-}
+
 </style>
