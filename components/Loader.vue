@@ -1,6 +1,6 @@
 <!-- components/Loader.vue -->
 <template>
-    <div class="loader" v-if="loading">
+    <div class="loader" >
       <div class="spinner"></div>
     </div>
   </template>

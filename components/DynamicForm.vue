@@ -1,6 +1,7 @@
 <template>
   <div class="container-fluid dynamic_form_container" :style="{ backgroundImage: `url(${formBackgroundImage})` }">
-  <div class="container "  >
+    <Loader v-if="loading" />
+  <div class="container " v-else  >
     
     <!-- Eğer form gönderilmemişse, form elemanı seçimini göster -->
     <div v-if="!isSubmitted" class="form_field_container">
@@ -67,6 +68,19 @@
 
     <!-- Eğer form gönderildiyse, CreatedForm bileşenini göster -->
     <div v-else>
+      <Welcome :key="welcome"
+          v-if="showWelcome"
+          @startForm="startForm"
+          :pageBackgroundImage="pageBackgroundImage"
+          :tertiaryColor="tertiaryColor"
+          :pageTitle="pageTitle"
+          :pageDesc="pageDesc"
+          :secondaryColor="secondaryColor"
+          :primaryColor="primaryColor"
+          :welcomeMessage="welcomeMessage"
+          :logo="logo"
+          :loading="loading"
+        />
       <CreatedForm :formFields="formFields" :formData="formData" />
     </div>
   </div>
@@ -102,6 +116,9 @@ export default {
         formBackgroundImage: {
             type: String,
         },
+        pageBackgroundImage: {
+            type: String,
+        },
         redirectUrl: {
             type: String,
         },
@@ -110,7 +127,15 @@ export default {
         },
         logo: {
             type: String,
-        }
+        },
+        welcomeMessage: {
+            type: Object,
+        },
+        loading: {
+            type: Boolean,
+        },
+       
+
       
     },
   components: {
@@ -130,6 +155,7 @@ export default {
       formFields: [],
       formData: {},
       isSubmitted: false, 
+      showWelcome: true,
     };
   },
   async created() {
@@ -144,6 +170,9 @@ export default {
     }
   },
   methods: {
+    startForm() {
+      this.showWelcome = false;
+    },
     getComponent(field) {
       switch (field.form_field_type.type) {
        

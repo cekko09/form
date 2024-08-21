@@ -4,8 +4,8 @@
      
       <transition name="fade" mode="out-in">
       <component
-        :is="showWelcome ? 'Welcome' : 'DynamicForm'"
-        :key="showWelcome ? 'welcome' : 'dynamicForm'"
+        :is="'DynamicForm'"
+        :key="'dynamicForm'"
         @startForm="startForm"
         :pageBackgroundImage="pageBackgroundImage"
         :formBackgroundImage="formBackgroundImage"
@@ -84,11 +84,7 @@ export default {
   components: {
     DynamicForm,
   },
-  methods: {
-    startForm() {
-      this.showWelcome = false;
-    },
-  }
+  
 };
 </script>
 
