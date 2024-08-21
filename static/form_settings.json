@@ -11,8 +11,8 @@
   "redirect_url": "https://lifesycle.co.uk",
   "unique_id": "d02zMlhaiw",
   "description": null,
-  "form_background_image": null,
-  "page_background_image": null,
+  "form_background_image": "https://wallpapers.com/images/hd/coffee-background-mxi5tjwxedm9bx0r.jpg",
+  "page_background_image": "https://i.pinimg.com/originals/09/67/39/09673964915d81d838cadcfba7b52429.jpg",
   "form_type_id": null,
   "options": {
     "page": {
@@ -44,15 +44,15 @@
   "custom_script": null,
   "update_contact_profile": false,
   "form_colors": {
-    "primary_color": "#d60000",
-    "tertiary_color": "#db2f71",
-    "secondary_color": "#ffffff"
+    "primary_color": "#311010",
+    "tertiary_color": "#311010",
+    "secondary_color": "#A18770"
   },
   "default_settings": {
     "company_form_settings_logo": "230c70e2-b1ce-4e0f-a737-19b40c4142a6/company_default_form_logo/n6TLutZ16IvnyJytwt8WwssO0NQOqDBxnToFpLnJ.png",
-    "company_form_settings_primary_color": "#d60000",
+    "company_form_settings_primary_color": "#311010",
     "company_form_settings_secondary_color": "#ffffff",
-    "company_form_settings_tertiary_color": "#db2f71",
+    "company_form_settings_tertiary_color": "#311010",
     "company_form_settings_welcome_message": {
       "description": "Welcome to our form!",
       "title": "Welcome!!!"

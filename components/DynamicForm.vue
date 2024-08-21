@@ -1,7 +1,13 @@
 <template>
-  <div class="container">
+  <div class="container-fluid dynamic_form_container" :style="{ backgroundImage: `url(${formBackgroundImage})` }">
+  <div class="container "  >
+    
     <!-- Eğer form gönderilmemişse, form elemanı seçimini göster -->
-    <div v-if="!isSubmitted">
+    <div v-if="!isSubmitted" class="form_field_container">
+      <div v-if="logo != null" class="logo_container text-center">
+        
+        <img :src="logo" class="img-fluid" height="300" width="300" alt="">
+      </div>
       <div class="form-group">
         <label for="formElementSelector">Form Elemanı Seçin</label>
         <select v-model="selectedField" @change="addField" class="form-control" id="formElementSelector">
@@ -33,11 +39,11 @@
               <label for="options">Options</label>
               <div v-for="(option, index) in selectedFormField.form_field_options" :key="index" class="form-group">
                 <input type="text" v-model="option.option_label" placeholder="Option Label" class="form-control" />
-                <button  :style="{ backgroundColor: primaryColor, borderColor: primaryColor }" @click="removeOption(index)" class="btn ">Remove</button>
+                <button  :style="{ backgroundColor: secondaryColor, borderColor: secondaryColor }" @click="removeOption(index)" class="btn ">Remove</button>
               </div>
-              <button  :style="{ backgroundColor: primaryColor, borderColor: primaryColor }" @click="addOption" class="btn ">Add Option</button>
+              <button  :style="{ backgroundColor: secondaryColor, borderColor: secondaryColor }" @click="addOption" class="btn ">Add Option</button>
             </div>
-            <button  :style="{ backgroundColor: primaryColor, borderColor: primaryColor }" @click="updateField" class="btn">Güncelle</button>
+            <button  :style="{ backgroundColor: secondaryColor, borderColor: secondaryColor }" @click="updateField" class="btn">Güncelle</button>
           </div>
         </div>
         <div class="col-md-9">
@@ -50,10 +56,10 @@
                 v-model="formData[field.unique_id]"
                 @click="selectField(field)"
               />
-              <button  :style="{ backgroundColor: primaryColor, borderColor: primaryColor }" type="button" @click="removeField(index, field)" class="btn ">Kapat</button>
-              <button  :style="{ backgroundColor: primaryColor, borderColor: primaryColor }" type="button" @click="editField(field)" class="btn ">Düzenle</button>
+              <button  :style="{ backgroundColor: secondaryColor, borderColor: secondaryColor }" type="button" @click="removeField(index, field)" class="btn ">Kapat</button>
+              <button  :style="{ backgroundColor: secondaryColor, borderColor: secondaryColor }" type="button" @click="editField(field)" class="btn ">Düzenle</button>
             </div>
-            <button  :style="{ backgroundColor: primaryColor, borderColor: primaryColor }" type="button" @click="handleSubmit" class="btn">Oluştur</button>
+            <button  :style="{ backgroundColor: secondaryColor, borderColor: secondaryColor }" type="button" @click="handleSubmit" class="btn">Oluştur</button>
           </form>
         </div>
       </div>
@@ -63,6 +69,7 @@
     <div v-else>
       <CreatedForm :formFields="formFields" :formData="formData" />
     </div>
+  </div>
   </div>
 </template>
 
@@ -75,6 +82,37 @@ import TextArea from './TextArea.vue';
 import Rating from './Rating.vue';
 import CreatedForm from './CreatedForm.vue';
 export default {
+  props: {
+        
+        secondaryColor: {
+            type: String,
+        },
+        primaryColor: {
+            type: String,
+        },
+        pageTitle: {
+            type: String,
+        },
+        pageDesc: {
+            type: String,
+        },
+        tertiaryColor: {
+            type: String,
+        },
+        formBackgroundImage: {
+            type: String,
+        },
+        redirectUrl: {
+            type: String,
+        },
+        successMessage: {
+            type: String,
+        },
+        logo: {
+            type: String,
+        }
+      
+    },
   components: {
     TextInput,
     SelectBox,
@@ -179,6 +217,21 @@ export default {
 </script>
 
 <style scoped>
+.dynamic_form_container {
+  min-height: 100vh;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+ display: flex;
+ align-content: center;
+}
+.container .form_field_container {
+  position: relative;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    left: 50%;
+
+}
 .form-group {
   margin-bottom: 15px;
 }
@@ -194,6 +247,10 @@ export default {
   border: 1px solid #ced4da;
   border-radius: 4px;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.form-control:focus{
+  outline: none;
+box-shadow: unset !important;
 }
 .btn {
   display: inline-block;
