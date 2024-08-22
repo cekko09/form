@@ -1,27 +1,95 @@
 <template>
   <div>
     <div class="container_fluid">
-     
+
       <transition name="fade" mode="out-in">
-      <component
-        :is="'DynamicForm'"
-        :key="'dynamicForm'"
-        @startForm="startForm"
-        :pageBackgroundImage="pageBackgroundImage"
-        :formBackgroundImage="formBackgroundImage"
-        :tertiaryColor="tertiaryColor"
-        :pageTitle="pageTitle"
-        :pageDesc="pageDesc"
-        :secondaryColor="secondaryColor"
-        :primaryColor="primaryColor"
-        :logo="logo"
-        :loading="loading"
-        :redirectUrl="redirectUrl"
-          :welcomeMessage="welcomeMessage"
-          :successMessage="successMessage"
-        v-bind="!showWelcome ? dynamicFormProps : {}"
-      />
-    </transition>
+        <div v-if="!settings_done" class="settings_container">
+          <div class="settings">
+            <form @submit.prevent="saveSettings" class="m-auto">
+              <div class="form-group">
+                <label class="form-label" for="primaryColor">Primary Color</label>
+                <input class="form-control" type="color" v-model="primaryColor" id="primaryColor" :disabled="useDefaultPrimaryColor" />
+                <input  type="checkbox" v-model="useDefaultPrimaryColor" /> Use Default
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="secondaryColor">Secondary Color</label>
+                <input class="form-control" type="color" v-model="secondaryColor" id="secondaryColor" :disabled="useDefaultSecondaryColor" />
+                <input  type="checkbox" v-model="useDefaultSecondaryColor" /> Use Default
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="tertiaryColor">Tertiary Color</label>
+                <input class="form-control" type="color" v-model="tertiaryColor" id="tertiaryColor" :disabled="useDefaultTertiaryColor" />
+                <input  type="checkbox" v-model="useDefaultTertiaryColor" /> Use Default
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="formBackgroundImage">Form Background Image</label>
+                <input class="form-control" type="text" v-model="formBackgroundImage" id="formBackgroundImage"
+                  :disabled="useDefaultFormBackgroundImage" />
+                <input  type="checkbox" v-model="useDefaultFormBackgroundImage" /> Use Default
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="pageBackgroundImage">Page Background Image</label>
+                <input class="form-control" type="text" v-model="pageBackgroundImage" id="pageBackgroundImage"
+                  :disabled="useDefaultPageBackgroundImage" />
+                <input  type="checkbox" v-model="useDefaultPageBackgroundImage" /> Use Default
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="pageTitle">Page Title</label>
+                <input class="form-control" type="text" v-model="pageTitle" id="pageTitle" />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="pageDesc">Page Description</label>
+                <input class="form-control" type="text" v-model="pageDesc" id="pageDesc" />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="logo">Logo</label>
+                <input class="form-control" type="text" v-model="logo" id="logo" :disabled="useDefaultLogo" />
+                <input  type="checkbox" v-model="useDefaultLogo" /> Use Default
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="redirectUrl">Redirect Url</label>
+                <input class="form-control" type="text" v-model="redirectUrl" id="redirectUrl" :disabled="useDefaultRedirectUrl" />
+                <input  type="checkbox" v-model="useDefaultRedirectUrl" /> Use Default
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="welcomeMessage">Welcome Message Title</label>
+                <input class="form-control" type="text" v-model="welcomeMessage.title" id="welcomeMessage"
+                  :disabled="useDefaultWelcomeMessageTitle" />
+                <input  type="checkbox" v-model="useDefaultWelcomeMessageTitle" /> Use Default
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="welcomeMessage">Welcome Message Description</label>
+                <input class="form-control" type="text" v-model="welcomeMessage.description" id="welcomeMessage"
+                  :disabled="useDefaultWelcomeMessageDesc" />
+                <input  type="checkbox" v-model="useDefaultWelcomeMessageDesc" /> Use Default
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="successMessage">Success Message</label>
+                <input class="form-control" type="text" v-model="successMessage" id="successMessage" :disabled="useDefaultSuccessMessage" />
+                <input  type="checkbox" v-model="useDefaultSuccessMessage" /> Use Default
+              </div>
+
+              <button type="submit">Submit</button>
+            </form>
+          </div>
+
+        </div>
+        <component v-else :is="'DynamicForm'" :key="'dynamicForm'" :pageBackgroundImage="pageBackgroundImage"
+          :formBackgroundImage="formBackgroundImage" :tertiaryColor="tertiaryColor" :pageTitle="pageTitle"
+          :pageDesc="pageDesc" :secondaryColor="secondaryColor" :primaryColor="primaryColor" :logo="logo"
+          :loading="loading" :redirectUrl="redirectUrl" :welcomeMessage="welcomeMessage"
+          :successMessage="successMessage" v-bind="!showWelcome ? dynamicFormProps : {}" />
+      </transition>
     </div>
 
   </div>
@@ -29,12 +97,10 @@
 </template>
 
 <script>
-import DynamicForm from '~/components/DynamicForm.vue';
 
 export default {
   data() {
     return {
-
       showWelcome: true,
       welcomeMessage: {
         title: '',
@@ -51,6 +117,19 @@ export default {
       successMessage: '',
       formBackgroundImage: null,
       pageBackgroundImage: null,
+      settings_done: false,
+
+      settings: null, // Settings verisini saklamak için
+      useDefaultPrimaryColor: false,
+      useDefaultSecondaryColor: false,
+      useDefaultTertiaryColor: false,
+      useDefaultFormBackgroundImage: false,
+      useDefaultPageBackgroundImage: false,
+      useDefaultLogo: false,
+      useDefaultRedirectUrl: false,
+      useDefaultWelcomeMessageTitle: false,
+      useDefaultWelcomeMessageDesc: false,
+      useDefaultSuccessMessage: false,
     };
   },
 
@@ -61,30 +140,107 @@ export default {
         throw new Error('Settings data network response was not ok');
       }
       const settings = await settingsResponse.json();
-
-      // Verileri component'te kullanmak üzere ayarla
+      this.settings = settings; // Settings verisini data içinde sakla
+      
       this.logo = settings.logo || settings.default_settings.company_form_settings_logo;
       this.redirectUrl = settings.redirect_url || settings.default_settings.company_form_settings_redirect_url;
       this.primaryColor = settings.form_colors.primary_color || settings.default_settings.company_form_settings_primary_color;
       this.secondaryColor = settings.form_colors.secondary_color || settings.default_settings.company_form_settings_secondary_color;
       this.tertiaryColor = settings.form_colors.tertiary_color || settings.default_settings.company_form_settings_tertiary_color;
-      this.welcomeMessage = settings.options.welcome_message || settings.default_settings.company_form_settings_welcome_message;
+      this.welcomeMessage = { 
+        title: settings.options.welcome_message.title || settings.default_settings.company_form_settings_welcome_message.title, 
+        description: settings.options.welcome_message.description || settings.default_settings.company_form_settings_welcome_message.description 
+      };
       this.pageTitle = settings.options.page.page_title;
       this.pageDesc = settings.options.page.page_description;
       this.successMessage = settings.success_message || settings.default_settings.company_form_settings_success_message;
       this.formBackgroundImage = settings.form_background_image || settings.default_settings.company_form_settings_form_background_image;
       this.pageBackgroundImage = settings.page_background_image || settings.default_settings.company_form_settings_page_background_image;
 
-      // Yüklenme tamamlandı
       this.loading = false;
+
+      this.applyDefaultValues();
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error);
     }
   },
-  components: {
-    DynamicForm,
+
+  watch: {
+    useDefaultPrimaryColor(val) {
+      if (val && this.settings) {
+        this.primaryColor = this.settings.default_settings.company_form_settings_primary_color;
+      }
+    },
+    useDefaultSecondaryColor(val) {
+      if (val && this.settings) {
+        this.secondaryColor = this.settings.default_settings.company_form_settings_secondary_color;
+      }
+    },
+    useDefaultTertiaryColor(val) {
+      if (val && this.settings) {
+        this.tertiaryColor = this.settings.default_settings.company_form_settings_tertiary_color;
+      }
+    },
+    useDefaultFormBackgroundImage(val) {
+      if (val && this.settings) {
+        this.formBackgroundImage = this.settings.default_settings.company_form_settings_form_background_image;
+      }
+    },
+    useDefaultPageBackgroundImage(val) {
+      if (val && this.settings) {
+        this.pageBackgroundImage = this.settings.default_settings.company_form_settings_page_background_image;
+      }
+    },
+    useDefaultLogo(val) {
+      if (val && this.settings) {
+        this.logo = this.settings.default_settings.company_form_settings_logo;
+      }
+    },
+    useDefaultRedirectUrl(val) {
+      if (val && this.settings) {
+        this.redirectUrl = this.settings.default_settings.company_form_settings_redirect_url;
+      }
+    },
+    useDefaultWelcomeMessageTitle(val) {
+      if (val && this.settings) {
+        this.welcomeMessage.title = this.settings.default_settings.company_form_settings_welcome_message.title;
+      }
+    },
+    useDefaultWelcomeMessageDesc(val) {
+      if (val && this.settings) {
+        this.welcomeMessage.description = this.settings.default_settings.company_form_settings_welcome_message.description;
+      }
+    },
+    useDefaultSuccessMessage(val) {
+      if (val && this.settings) {
+        this.successMessage = this.settings.default_settings.company_form_settings_success_message;
+      }
+    },
   },
-  
+
+  methods: {
+    saveSettings() {
+      this.settings_done = true;
+    },
+    applyDefaultValues() {
+      if (this.settings) {
+        if (this.useDefaultPrimaryColor) this.primaryColor = this.settings.default_settings.company_form_settings_primary_color;
+        if (this.useDefaultSecondaryColor) this.secondaryColor = this.settings.default_settings.company_form_settings_secondary_color;
+        if (this.useDefaultTertiaryColor) this.tertiaryColor = this.settings.default_settings.company_form_settings_tertiary_color;
+        if (this.useDefaultFormBackgroundImage) this.formBackgroundImage = this.settings.default_settings.company_form_settings_form_background_image;
+        if (this.useDefaultPageBackgroundImage) this.pageBackgroundImage = this.settings.default_settings.company_form_settings_page_background_image;
+        if (this.useDefaultLogo) this.logo = this.settings.default_settings.company_form_settings_logo;
+        if (this.useDefaultRedirectUrl) this.redirectUrl = this.settings.default_settings.company_form_settings_redirect_url;
+        if (this.useDefaultWelcomeMessageTitle) {
+          this.welcomeMessage.title = this.settings.default_settings.company_form_settings_welcome_message.title;
+        }
+        if (this.useDefaultWelcomeMessageDesc) {
+          this.welcomeMessage.description = this.settings.default_settings.company_form_settings_welcome_message.description;
+        }
+        if (this.useDefaultSuccessMessage) this.successMessage = this.settings.default_settings.company_form_settings_success_message;
+      }
+    },
+  }
 };
 </script>
 
@@ -101,8 +257,13 @@ p {
   text-align: center;
   margin-top: 20px;
 }
+.settings_container {
 
-
+}
+.settings_container .settings {
+ 
+  width: 800px;
+}
 
 .btn {
   display: inline-block;
@@ -122,11 +283,17 @@ p {
 .btn:hover {
   color: #fff !important;
 }
-.fade-enter-active, .fade-leave-active {
+
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity 0.5s ease;
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+
+.fade-enter,
+.fade-leave-to
+
+/* .fade-leave-active in <2.1.8 */
+  {
   opacity: 0;
 }
-
 </style>
