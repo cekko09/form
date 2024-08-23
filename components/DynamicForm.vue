@@ -3,7 +3,7 @@
     <Loader v-if="loading" />
   <div class="container " v-else  >
     
-    <!-- Eğer form gönderilmemişse, form elemanı seçimini göster -->
+
     <div v-if="!isSubmitted" class="form_field_container">
       <div v-if="logo != null" class="logo_container text-center">
         
@@ -66,7 +66,6 @@
       </div>
     </div>
 
-    <!-- Eğer form gönderildiyse, CreatedForm bileşenini göster -->
     <div v-else>
       <Welcome :key="welcome"
           v-if="showWelcome"
@@ -196,7 +195,7 @@ export default {
       if (this.selectedField) {
         const newField = JSON.parse(JSON.stringify(this.selectedField));
         if (newField.form_field_type.type === 'rating') {
-          this.$set(this.formData, newField.unique_id, 0);  // Ensure numeric default value
+          this.$set(this.formData, newField.unique_id, 0); 
         } else {
           this.$set(this.formData, newField.unique_id, newField.form_field_type.type === 'checkbox' ? [] : '');
         }

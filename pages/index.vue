@@ -119,7 +119,7 @@ export default {
       pageBackgroundImage: null,
       settings_done: false,
 
-      settings: null, // Settings verisini saklamak için
+      settings: null,
       useDefaultPrimaryColor: false,
       useDefaultSecondaryColor: false,
       useDefaultTertiaryColor: false,
@@ -257,43 +257,96 @@ p {
   text-align: center;
   margin-top: 20px;
 }
+
+.container_fluid {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
 .settings_container {
-
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
-.settings_container .settings {
- 
-  width: 800px;
+
+.settings {
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  width: 100%;
 }
 
-.btn {
-  display: inline-block;
-  font-weight: 400;
-  text-align: center;
-  vertical-align: middle;
-  cursor: pointer;
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: block;
+  font-size: 14px;
+  color: #333333;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+input[type="checkbox"] {
+  margin-left: 10px;
+  transform: scale(1.2);
+}
+
+button[type="submit"] {
+  background-color: #007bff;
+  color: #ffffff;
   padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
   font-size: 16px;
-  line-height: 1.5;
-  border-radius: 4px;
-  color: white;
-  text-decoration: none;
-  margin-top: 10px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s ease;
 }
 
-.btn:hover {
-  color: #fff !important;
+button[type="submit"]:hover {
+  background-color: #0056b3;
 }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s ease;
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s;
 }
 
-.fade-enter,
-.fade-leave-to
-
-/* .fade-leave-active in <2.1.8 */
-  {
+.fade-enter, .fade-leave-to  {
   opacity: 0;
 }
+
+@media (max-width: 768px) {
+  .settings {
+    padding: 20px;
+  }
+
+  .form-label {
+    font-size: 12px;
+  }
+
+  .form-control {
+    font-size: 12px;
+  }
+
+  button[type="submit"] {
+    font-size: 14px;
+  }
+}
+
 </style>
