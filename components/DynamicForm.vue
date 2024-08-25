@@ -67,7 +67,7 @@
     </div>
 
     <div v-else>
-      <Welcome :key="welcome"
+      <Welcome 
           v-if="showWelcome"
           @startForm="startForm"
           :pageBackgroundImage="pageBackgroundImage"
@@ -80,7 +80,19 @@
           :logo="logo"
           :loading="loading"
         />
-      <CreatedForm :formFields="formFields" :formData="formData" />
+      <CreatedForm v-else :formFields="formFields" :formData="formData"
+      :pageBackgroundImage="pageBackgroundImage"
+          :tertiaryColor="tertiaryColor"
+          :pageTitle="pageTitle"
+          :pageDesc="pageDesc"
+          :secondaryColor="secondaryColor"
+          :primaryColor="primaryColor"
+          :logo="logo"
+          :redirectUrl="redirectUrl"
+          :successMessage="successMessage"
+          :welcomeMessage="welcomeMessage"
+          :loading="loading"
+      />
     </div>
   </div>
   </div>

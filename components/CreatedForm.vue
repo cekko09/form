@@ -1,89 +1,164 @@
 <template>
-  <div>
-    <form class="m-auto" @submit.prevent="handleFinalSubmit">
-      <div v-if="currentStep < formFields.length">
-        <component
-          :is="getComponent(currentField)"
-          :field="currentField"
-          v-model="formData[currentField.unique_id]"
-        />
-        <div class="button-container">
-          <button :style="{ backgroundColor: primaryColor, borderColor: primaryColor }"  type="button" class="btn" @click="prevStep" v-if="currentStep > 0">Geri</button>
-          <button :style="{ backgroundColor: primaryColor, borderColor: primaryColor }"  type="button" class="btn" @click="nextStep" v-if="currentStep < formFields.length - 1">İleri</button>
-          <button :style="{ backgroundColor: primaryColor, borderColor: primaryColor }"  type="submit" class="btn" v-if="currentStep === formFields.length - 1">Gönder</button>
-        </div>
+  <div class="form_container">
+
+    <transition name="fade" mode="out-in">
+
+    
+    <div >
+      <div class="logo_container text-center">
+        <h3 :style="{ color: secondaryColor }">{{ welcomeMessage.description }}</h3>
+        <img :src="logo" class="img-fluid" height="300" width="300" alt="">
       </div>
-      <div v-else>
-        <p>Formunuz gönderildi!</p>
-      </div>
-    </form>
+      <form onkeydown="return event.key != 'Enter';" @submit.prevent="handleFinalSubmit">
+        <transition name="fade" mode="out-in">
+          <div v-if="loading" :key="'loading'">
+            <p>Yükleniyor...</p>
+          </div>
+          <div v-else :key="currentStep">
+            <div v-if="currentStep < formFieldData.length">
+              <component :is="getComponent(currentField)" :field="currentField" v-if="!currentField.is_hidden"
+                v-model="formDataLocal[currentField.unique_id]" />
+              <div class="button-container">
+                <button type="button" :style="{ backgroundColor: primaryColor, borderColor: primaryColor }" class="btn"
+                  @click="prevStep" v-if="currentStep > 0">Geri</button>
+                <button type="button" :style="{ backgroundColor: primaryColor, borderColor: primaryColor }" class="btn"
+                  @click="nextStep" v-show="currentStep < formFieldData.length - 1">İleri</button>
+                <button type="submit" :style="{ backgroundColor: primaryColor, borderColor: primaryColor }" class="btn"
+                  v-show="currentStep === formFieldData.length - 1">Gönder</button>
+              </div>
+            </div>
+            <div v-else>
+              <h1 :style="{ color: secondaryColor }">{{ successMessageData }}</h1>
+              <p :style="{ color: secondaryColor }">{{ timer }} Saniye içinde yönlendirileceksiniz</p>
+            </div>
+          </div>
+        </transition>
+      </form>
+    </div>
+  </transition>
+
+    <div class="page_details">
+      <h5 :style="{ color: tertiaryColor }"> {{ pageTitle }}</h5>
+      <p :style="{ color: tertiaryColor }"> {{ pageDesc }}</p>
+    </div>
+
   </div>
+
 </template>
 
 <script>
-import TextInput from './TextInput.vue';
-import SelectBox from './SelectBox.vue';
-import CheckBox from './CheckBox.vue';
-import RadioButton from './RadioButton.vue';
-import TextArea from './TextArea.vue';
-import Rating from './Rating.vue';
-
 export default {
-  components: {
-    TextInput,
-    SelectBox,
-    CheckBox,
-    RadioButton,
-    TextArea,
-    Rating,
+props: {
+  formFields: {
+    type: Array,
+    required: true
   },
-  props: {
-    formFields: {
-      type: Array,
-      required: true,
-    },
-    formData: {
-      type: Object,
-      required: true,
-    },
+  formData: {
+    type: Object,
+    required: true
   },
+  pageBackgroundImage: {
+    type: String,
+    required: true
+  },
+  tertiaryColor: {
+    type: String,
+    required: true
+  },
+  pageTitle: {
+    type: String,
+    required: true
+  },
+  pageDesc: {
+    type: String,
+    required: true
+  },
+  secondaryColor: {
+    type: String,
+    required: true
+  },
+  primaryColor: {
+    type: String,
+    required: true
+  },
+  logo: {
+    type: String,
+    required: true
+  },
+  welcomeMessage: {
+    type: Object,
+    required: true
+  },
+  redirectUrl: {
+    type: String,
+    required: true
+  },
+  successMessage: {
+    type: String,
+    required: true
+  },
+
+  loading: {
+    type: Boolean,
+    required: true
+  }
+
+},
+
   data() {
     return {
       currentStep: 0,
+      formFieldData: this.formFields,
+      formDataLocal: this.formData,
+      timer: 5,
+      showWelcome: true,
+      
+      successMessageData: this.successMessage,
+
     };
   },
-  async created() {
-    try {
-      const settingsResponse = await fetch('/form_settings.json');
-      if (!settingsResponse.ok) {
-        throw new Error('Settings data network response was not ok');
-      }
-      const settings = await settingsResponse.json();
 
-      this.primaryColor = settings.form_colors.primary_color || settings.default_settings.company_form_settings_primary_color;
-      this.secondaryColor = settings.form_colors.secondary_color || settings.default_settings.company_form_settings_secondary_color;
-      this.tertiaryColor = settings.form_colors.tertiary_color || settings.default_settings.company_form_settings_tertiary_color;
-     
-  
 
-    } catch (error) {
-      console.error('There was a problem with the fetch operation:', error);
-    }
-  },
+
 
   computed: {
     currentField() {
-      return this.formFields[this.currentStep];
+      return this.formFieldData[this.currentStep];
+    },
+  },
+  watch: {
+    currentStep(newVal) {
+      if (newVal >= this.formFieldData.length) {
+        this.startCountdown();
+        this.finalLog();
+      }
     },
   },
   methods: {
+    startForm() {
+      this.showWelcome = false;
+    },
+    finalLog() {
+      console.log(this.formDataLocal);
+
+    },
+    startCountdown() {
+      this.interval = setInterval(() => {
+        if (this.timer > 0) {
+          this.timer--;
+        } else {
+          clearInterval(this.interval);
+          this.redirectToThankYouPage();
+        }
+      }, 1000); 
+    },
+    redirectToThankYouPage() {
+      window.location.href = this.redirectUrl;
+    },
     getComponent(field) {
       switch (field.form_field_type.type) {
-        case 'email':
-        case 'number':
-        case 'date':
-          return 'TextInput';
         case 'selectbox':
+        case 'salutation':
           return 'SelectBox';
         case 'checkbox':
           return 'CheckBox';
@@ -98,8 +173,16 @@ export default {
       }
     },
     nextStep() {
-      if (this.currentStep < this.formFields.length - 1) {
-        this.currentStep++;
+      const currentField = this.formFieldData[this.currentStep];
+
+      if (currentField.is_required && !this.formDataLocal[currentField.unique_id]) {
+        this.errorMessage = `${currentField.label} alanı doldurulmalıdır.`;
+        alert(this.errorMessage);
+      } else {
+        this.errorMessage = '';
+        if (this.currentStep < this.formFieldData.length - 1) {
+          this.currentStep++;
+        }
       }
     },
     prevStep() {
@@ -108,20 +191,62 @@ export default {
       }
     },
     handleFinalSubmit() {
-      console.log(this.formData);
-      this.currentStep++;
+      const currentField = this.formFieldData[this.currentStep];
+
+      if (currentField.is_required && !this.formDataLocal[currentField.unique_id]) {
+        this.errorMessage = `${currentField.label} alanı doldurulmalıdır.`;
+        alert(this.errorMessage);
+      } else {
+        this.errorMessage = '';
+        this.currentStep++;
+      }
     },
   },
 };
 </script>
 
 <style scoped>
+.page_details {
+position: absolute;
+bottom: 0;
+left: 0;
+padding: 20px;
+}
+h3 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #A18770;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.form_container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  max-width: 600px;
+  margin: auto;
+
+}
+
 form {
   max-width: 600px;
 }
+
 .form-group {
   margin-bottom: 15px;
 }
+
 .form-control {
   display: block;
   width: 100%;
@@ -135,6 +260,7 @@ form {
   border-radius: 4px;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
+
 .btn {
   display: inline-block;
   font-weight: 400;
@@ -150,6 +276,7 @@ form {
   text-decoration: none;
   margin-top: 10px;
 }
+
 .button-container {
   display: flex;
   justify-content: space-between;
