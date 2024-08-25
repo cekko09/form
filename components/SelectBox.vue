@@ -12,7 +12,7 @@
       <option
       value="" disabled selected hidden
         >
-  Select Your Option        </option>
+  {{ field.placeholder }}       </option>
         <option
           v-for="(option, index) in field.form_field_options"
           :key="index"

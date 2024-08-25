@@ -47,6 +47,7 @@
 </template>
 
 <script>
+
 export default {
 props: {
   formFields: {
@@ -122,6 +123,7 @@ props: {
 mounted() {
   console.log(this.currentField);
 
+
 },
 
   computed: {
@@ -191,8 +193,19 @@ mounted() {
       const currentField = this.formFieldData[this.currentStep];
 
       if (currentField.is_required && currentField.form_field_options.option_value != '' && this.formData[currentField.unique_id] == '' || currentField.is_required &&  !this.formData[currentField.unique_id] && currentField.form_field_options.option_value != '' ) {
-        this.errorMessage = `${currentField.label} alanı doldurulmalıdır.`;
-        alert(this.errorMessage);
+        this.$swal.fire({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        text: 'Please fill the required space',
+        timer: 3000,
+        icon: "error",
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        }
+      });
       } else {
         this.errorMessage = '';
         if (this.currentStep < this.formFieldData.length - 1) {
@@ -209,8 +222,19 @@ mounted() {
       const currentField = this.formFieldData[this.currentStep];
 
       if (currentField.is_required && currentField.form_field_options.option_value != '' && this.formData[currentField.unique_id] == '' || currentField.is_required &&  !this.formData[currentField.unique_id] && currentField.form_field_options.option_value != '' ) {
-        this.errorMessage = `${currentField.label} alanı doldurulmalıdır.`;
-        alert(this.errorMessage);
+        this.$swal.fire({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        text: 'Please fill the required space',
+        timer: 3000,
+        icon: "error",
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        }
+      });
       } else {
         this.errorMessage = '';
         this.currentStep++;

@@ -8,35 +8,32 @@
             <form @submit.prevent="saveSettings" class="m-auto">
               <div class="form-group">
                 <label class="form-label" for="primaryColor">Primary Color</label>
-                <input class="form-control" type="color" v-model="primaryColor" id="primaryColor" :disabled="useDefaultPrimaryColor" />
-                <input  type="checkbox" v-model="useDefaultPrimaryColor" /> Use Default
+                <input class="form-control" type="color" v-model="primaryColor" id="primaryColor"
+                  :disabled="useDefaultPrimaryColor" />
+                <input type="checkbox" v-model="useDefaultPrimaryColor" /> Use Default
               </div>
 
               <div class="form-group">
                 <label class="form-label" for="secondaryColor">Secondary Color</label>
-                <input class="form-control" type="color" v-model="secondaryColor" id="secondaryColor" :disabled="useDefaultSecondaryColor" />
-                <input  type="checkbox" v-model="useDefaultSecondaryColor" /> Use Default
+                <input class="form-control" type="color" v-model="secondaryColor" id="secondaryColor"
+                  :disabled="useDefaultSecondaryColor" />
+                <input type="checkbox" v-model="useDefaultSecondaryColor" /> Use Default
               </div>
 
               <div class="form-group">
                 <label class="form-label" for="tertiaryColor">Tertiary Color</label>
-                <input class="form-control" type="color" v-model="tertiaryColor" id="tertiaryColor" :disabled="useDefaultTertiaryColor" />
-                <input  type="checkbox" v-model="useDefaultTertiaryColor" /> Use Default
+                <input class="form-control" type="color" v-model="tertiaryColor" id="tertiaryColor"
+                  :disabled="useDefaultTertiaryColor" />
+                <input type="checkbox" v-model="useDefaultTertiaryColor" /> Use Default
               </div>
 
               <div class="form-group">
                 <label class="form-label" for="formBackgroundImage">Form Background Image</label>
                 <input class="form-control" type="text" v-model="formBackgroundImage" id="formBackgroundImage"
                   :disabled="useDefaultFormBackgroundImage" />
-                <input  type="checkbox" v-model="useDefaultFormBackgroundImage" /> Use Default
+                <input type="checkbox" v-model="useDefaultFormBackgroundImage" /> Use Default
               </div>
 
-              <div class="form-group">
-                <label class="form-label" for="pageBackgroundImage">Page Background Image</label>
-                <input class="form-control" type="text" v-model="pageBackgroundImage" id="pageBackgroundImage"
-                  :disabled="useDefaultPageBackgroundImage" />
-                <input  type="checkbox" v-model="useDefaultPageBackgroundImage" /> Use Default
-              </div>
 
               <div class="form-group">
                 <label class="form-label" for="pageTitle">Page Title</label>
@@ -51,32 +48,34 @@
               <div class="form-group">
                 <label class="form-label" for="logo">Logo</label>
                 <input class="form-control" type="text" v-model="logo" id="logo" :disabled="useDefaultLogo" />
-                <input  type="checkbox" v-model="useDefaultLogo" /> Use Default
+                <input type="checkbox" v-model="useDefaultLogo" /> Use Default
               </div>
 
               <div class="form-group">
                 <label class="form-label" for="redirectUrl">Redirect Url</label>
-                <input class="form-control" type="text" v-model="redirectUrl" id="redirectUrl" :disabled="useDefaultRedirectUrl" />
-                <input  type="checkbox" v-model="useDefaultRedirectUrl" /> Use Default
+                <input class="form-control" type="text" v-model="redirectUrl" id="redirectUrl"
+                  :disabled="useDefaultRedirectUrl" />
+                <input type="checkbox" v-model="useDefaultRedirectUrl" /> Use Default
               </div>
 
               <div class="form-group">
                 <label class="form-label" for="welcomeMessage">Welcome Message Title</label>
                 <input class="form-control" type="text" v-model="welcomeMessage.title" id="welcomeMessage"
                   :disabled="useDefaultWelcomeMessageTitle" />
-                <input  type="checkbox" v-model="useDefaultWelcomeMessageTitle" /> Use Default
+                <input type="checkbox" v-model="useDefaultWelcomeMessageTitle" /> Use Default
               </div>
               <div class="form-group">
                 <label class="form-label" for="welcomeMessage">Welcome Message Description</label>
                 <input class="form-control" type="text" v-model="welcomeMessage.description" id="welcomeMessage"
                   :disabled="useDefaultWelcomeMessageDesc" />
-                <input  type="checkbox" v-model="useDefaultWelcomeMessageDesc" /> Use Default
+                <input type="checkbox" v-model="useDefaultWelcomeMessageDesc" /> Use Default
               </div>
 
               <div class="form-group">
                 <label class="form-label" for="successMessage">Success Message</label>
-                <input class="form-control" type="text" v-model="successMessage" id="successMessage" :disabled="useDefaultSuccessMessage" />
-                <input  type="checkbox" v-model="useDefaultSuccessMessage" /> Use Default
+                <input class="form-control" type="text" v-model="successMessage" id="successMessage"
+                  :disabled="useDefaultSuccessMessage" />
+                <input type="checkbox" v-model="useDefaultSuccessMessage" /> Use Default
               </div>
 
               <button type="submit">Submit</button>
@@ -97,7 +96,6 @@
 </template>
 
 <script>
-
 export default {
   data() {
     return {
@@ -130,18 +128,6 @@ export default {
       useDefaultWelcomeMessageTitle: false,
       useDefaultWelcomeMessageDesc: false,
       useDefaultSuccessMessage: false,
-
-      // Store previous custom values
-      previousPrimaryColor: null,
-      previousSecondaryColor: null,
-      previousTertiaryColor: null,
-      previousFormBackgroundImage: null,
-      previousPageBackgroundImage: null,
-      previousLogo: null,
-      previousRedirectUrl: null,
-      previousWelcomeMessageTitle: null,
-      previousWelcomeMessageDescription: null,
-      previousSuccessMessage: null,
     };
   },
 
@@ -154,7 +140,6 @@ export default {
       const settings = await settingsResponse.json();
       this.settings = settings; // Settings verisini data içinde sakla
 
-      // Değerleri yükle
       this.logo = settings.logo || settings.default_settings.company_form_settings_logo;
       this.redirectUrl = settings.redirect_url || settings.default_settings.company_form_settings_redirect_url;
       this.primaryColor = settings.form_colors.primary_color || settings.default_settings.company_form_settings_primary_color;
@@ -176,10 +161,19 @@ export default {
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error);
     }
-  },
+    
 
+  },
   watch: {
-    // Varsayılan check için izleyiciler
+    // Watchers for Use Default checkboxes
+    useDefaultPrimaryColor(val) {
+      if (val && this.settings) {
+        this.previousPrimaryColor = this.primaryColor;
+        this.primaryColor = this.settings.default_settings.company_form_settings_primary_color;
+      } else if (this.previousPrimaryColor) {
+        this.primaryColor = this.previousPrimaryColor;
+      }
+    },
     primaryColor(newVal) {
       if (this.settings && newVal === this.settings.default_settings.company_form_settings_primary_color) {
         this.useDefaultPrimaryColor = true;
@@ -187,11 +181,27 @@ export default {
         this.useDefaultPrimaryColor = false;
       }
     },
-    secondaryColor(newVal) {
+    useDefaultSecondaryColor(val) {
+      if (val && this.settings) {
+        this.previousSecondaryColor = this.secondaryColor;
+        this.secondaryColor = this.settings.default_settings.company_form_settings_secondary_color;
+      } else if (this.previousSecondaryColor) {
+        this.secondaryColor = this.previousSecondaryColor;
+      }
+    },
+      secondaryColor(newVal) {
       if (this.settings && newVal === this.settings.default_settings.company_form_settings_secondary_color) {
         this.useDefaultSecondaryColor = true;
       } else {
         this.useDefaultSecondaryColor = false;
+      }
+    },
+    useDefaultTertiaryColor(val) {
+      if (val && this.settings) {
+        this.previousTertiaryColor = this.tertiaryColor;
+        this.tertiaryColor = this.settings.default_settings.company_form_settings_tertiary_color;
+      } else if (this.previousTertiaryColor) {
+        this.tertiaryColor = this.previousTertiaryColor;
       }
     },
     tertiaryColor(newVal) {
@@ -201,11 +211,27 @@ export default {
         this.useDefaultTertiaryColor = false;
       }
     },
+    useDefaultFormBackgroundImage(val) {
+      if (val && this.settings) {
+        this.previousFormBackgroundImage = this.formBackgroundImage;
+        this.formBackgroundImage = this.settings.default_settings.company_form_settings_form_background_image;
+      } else if (this.previousFormBackgroundImage) {
+        this.formBackgroundImage = this.previousFormBackgroundImage;
+      }
+    },
     formBackgroundImage(newVal) {
       if (this.settings && newVal === this.settings.default_settings.company_form_settings_form_background_image) {
         this.useDefaultFormBackgroundImage = true;
       } else {
         this.useDefaultFormBackgroundImage = false;
+      }
+    },
+    useDefaultPageBackgroundImage(val) {
+      if (val && this.settings) {
+        this.previousPageBackgroundImage = this.pageBackgroundImage;
+        this.pageBackgroundImage = this.settings.default_settings.company_form_settings_page_background_image;
+      } else if (this.previousPageBackgroundImage) {
+        this.pageBackgroundImage = this.previousPageBackgroundImage;
       }
     },
     pageBackgroundImage(newVal) {
@@ -215,11 +241,27 @@ export default {
         this.useDefaultPageBackgroundImage = false;
       }
     },
+    useDefaultLogo(val) {
+      if (val && this.settings) {
+        this.previousLogo = this.logo;
+        this.logo = this.settings.default_settings.company_form_settings_logo;
+      } else if (this.previousLogo) {
+        this.logo = this.previousLogo;
+      }
+    },
     logo(newVal) {
       if (this.settings && newVal === this.settings.default_settings.company_form_settings_logo) {
         this.useDefaultLogo = true;
       } else {
         this.useDefaultLogo = false;
+      }
+    },
+    useDefaultRedirectUrl(val) {
+      if (val && this.settings) {
+        this.previousRedirectUrl = this.redirectUrl;
+        this.redirectUrl = this.settings.default_settings.company_form_settings_redirect_url;
+      } else if (this.previousRedirectUrl) {
+        this.redirectUrl = this.previousRedirectUrl;
       }
     },
     redirectUrl(newVal) {
@@ -229,11 +271,27 @@ export default {
         this.useDefaultRedirectUrl = false;
       }
     },
+    useDefaultWelcomeMessageTitle(val) {
+      if (val && this.settings) {
+        this.previousWelcomeMessageTitle = this.welcomeMessage.title;
+        this.welcomeMessage.title = this.settings.default_settings.company_form_settings_welcome_message.title;
+      } else if (this.previousWelcomeMessageTitle) {
+        this.welcomeMessage.title = this.previousWelcomeMessageTitle;
+      }
+    },
     'welcomeMessage.title'(newVal) {
       if (this.settings && newVal === this.settings.default_settings.company_form_settings_welcome_message.title) {
         this.useDefaultWelcomeMessageTitle = true;
       } else {
         this.useDefaultWelcomeMessageTitle = false;
+      }
+    },
+    useDefaultWelcomeMessageDesc(val) {
+      if (val && this.settings) {
+        this.previousWelcomeMessageDescription = this.welcomeMessage.description;
+        this.welcomeMessage.description = this.settings.default_settings.company_form_settings_welcome_message.description;
+      } else if (this.previousWelcomeMessageDescription) {
+        this.welcomeMessage.description = this.previousWelcomeMessageDescription;
       }
     },
     'welcomeMessage.description'(newVal) {
@@ -243,40 +301,48 @@ export default {
         this.useDefaultWelcomeMessageDesc = false;
       }
     },
+    useDefaultSuccessMessage(val) {
+      if (val && this.settings) {
+        this.previousSuccessMessage = this.successMessage;
+        this.successMessage = this.settings.default_settings.company_form_settings_success_message;
+      } else if (this.previousSuccessMessage) {
+        this.successMessage = this.previousSuccessMessage;
+      }
+    },
     successMessage(newVal) {
       if (this.settings && newVal === this.settings.default_settings.company_form_settings_success_message) {
         this.useDefaultSuccessMessage = true;
       } else {
         this.useDefaultSuccessMessage = false;
       }
-    }
+    },
   },
 
-  methods: {
-    saveSettings() {
-      this.settings_done = true;
-    },
 
-    applyDefaultValues() {
-      if (this.settings) {
-        if (this.useDefaultPrimaryColor) this.primaryColor = this.settings.default_settings.company_form_settings_primary_color;
-        if (this.useDefaultSecondaryColor) this.secondaryColor = this.settings.default_settings.company_form_settings_secondary_color;
-        if (this.useDefaultTertiaryColor) this.tertiaryColor = this.settings.default_settings.company_form_settings_tertiary_color;
-        if (this.useDefaultFormBackgroundImage) this.formBackgroundImage = this.settings.default_settings.company_form_settings_form_background_image;
-        if (this.useDefaultPageBackgroundImage) this.pageBackgroundImage = this.settings.default_settings.company_form_settings_page_background_image;
-        if (this.useDefaultLogo) this.logo = this.settings.default_settings.company_form_settings_logo;
-        if (this.useDefaultRedirectUrl) this.redirectUrl = this.settings.default_settings.company_form_settings_redirect_url;
-        if (this.useDefaultWelcomeMessageTitle) {
-          this.welcomeMessage.title = this.settings.default_settings.company_form_settings_welcome_message.title;
-        }
-        if (this.useDefaultWelcomeMessageDesc) {
-          this.welcomeMessage.description = this.settings.default_settings.company_form_settings_welcome_message.description;
-        }
-        if (this.useDefaultSuccessMessage) this.successMessage = this.settings.default_settings.company_form_settings_success_message;
+methods: {
+  saveSettings() {
+    this.settings_done = true;
+  },
+  applyDefaultValues() {
+    if (this.settings) {
+      if (this.useDefaultPrimaryColor) this.primaryColor = this.settings.default_settings.company_form_settings_primary_color;
+      if (this.useDefaultSecondaryColor) this.secondaryColor = this.settings.default_settings.company_form_settings_secondary_color;
+      if (this.useDefaultTertiaryColor) this.tertiaryColor = this.settings.default_settings.company_form_settings_tertiary_color;
+      if (this.useDefaultFormBackgroundImage) this.formBackgroundImage = this.settings.default_settings.company_form_settings_form_background_image;
+      if (this.useDefaultPageBackgroundImage) this.pageBackgroundImage = this.settings.default_settings.company_form_settings_page_background_image;
+      if (this.useDefaultLogo) this.logo = this.settings.default_settings.company_form_settings_logo;
+      if (this.useDefaultRedirectUrl) this.redirectUrl = this.settings.default_settings.company_form_settings_redirect_url;
+      if (this.useDefaultWelcomeMessageTitle) {
+        this.welcomeMessage.title = this.settings.default_settings.company_form_settings_welcome_message.title;
       }
-    },
+      if (this.useDefaultWelcomeMessageDesc) {
+        this.welcomeMessage.description = this.settings.default_settings.company_form_settings_welcome_message.description;
+      }
+      if (this.useDefaultSuccessMessage) this.successMessage = this.settings.default_settings.company_form_settings_success_message;
+    }
   }
-};
+}
+}
 </script>
 
 <style scoped>
@@ -356,11 +422,13 @@ button[type="submit"]:hover {
 }
 
 
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity 0.5s;
 }
 
-.fade-enter, .fade-leave-to  {
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
 }
 
@@ -381,5 +449,4 @@ button[type="submit"]:hover {
     font-size: 14px;
   }
 }
-
 </style>
