@@ -195,6 +195,7 @@ export default {
     getComponent(field) {
       switch (field.form_field_type.type) {
         case 'salutation':
+        case 'selectbox': 
           return 'SelectBox';
         case 'checkbox':
           return 'CheckBox';

@@ -130,6 +130,18 @@ export default {
       useDefaultWelcomeMessageTitle: false,
       useDefaultWelcomeMessageDesc: false,
       useDefaultSuccessMessage: false,
+
+      // Store previous custom values
+      previousPrimaryColor: null,
+      previousSecondaryColor: null,
+      previousTertiaryColor: null,
+      previousFormBackgroundImage: null,
+      previousPageBackgroundImage: null,
+      previousLogo: null,
+      previousRedirectUrl: null,
+      previousWelcomeMessageTitle: null,
+      previousWelcomeMessageDescription: null,
+      previousSuccessMessage: null,
     };
   },
 
@@ -141,7 +153,7 @@ export default {
       }
       const settings = await settingsResponse.json();
       this.settings = settings; // Settings verisini data içinde sakla
-      
+
       this.logo = settings.logo || settings.default_settings.company_form_settings_logo;
       this.redirectUrl = settings.redirect_url || settings.default_settings.company_form_settings_redirect_url;
       this.primaryColor = settings.form_colors.primary_color || settings.default_settings.company_form_settings_primary_color;
@@ -166,54 +178,85 @@ export default {
   },
 
   watch: {
+    // Watchers for Use Default checkboxes
     useDefaultPrimaryColor(val) {
       if (val && this.settings) {
+        this.previousPrimaryColor = this.primaryColor;
         this.primaryColor = this.settings.default_settings.company_form_settings_primary_color;
+      } else if (this.previousPrimaryColor) {
+        this.primaryColor = this.previousPrimaryColor;
       }
     },
     useDefaultSecondaryColor(val) {
       if (val && this.settings) {
+        this.previousSecondaryColor = this.secondaryColor;
         this.secondaryColor = this.settings.default_settings.company_form_settings_secondary_color;
+      } else if (this.previousSecondaryColor) {
+        this.secondaryColor = this.previousSecondaryColor;
       }
     },
     useDefaultTertiaryColor(val) {
       if (val && this.settings) {
+        this.previousTertiaryColor = this.tertiaryColor;
         this.tertiaryColor = this.settings.default_settings.company_form_settings_tertiary_color;
+      } else if (this.previousTertiaryColor) {
+        this.tertiaryColor = this.previousTertiaryColor;
       }
     },
     useDefaultFormBackgroundImage(val) {
       if (val && this.settings) {
+        this.previousFormBackgroundImage = this.formBackgroundImage;
         this.formBackgroundImage = this.settings.default_settings.company_form_settings_form_background_image;
+      } else if (this.previousFormBackgroundImage) {
+        this.formBackgroundImage = this.previousFormBackgroundImage;
       }
     },
     useDefaultPageBackgroundImage(val) {
       if (val && this.settings) {
+        this.previousPageBackgroundImage = this.pageBackgroundImage;
         this.pageBackgroundImage = this.settings.default_settings.company_form_settings_page_background_image;
+      } else if (this.previousPageBackgroundImage) {
+        this.pageBackgroundImage = this.previousPageBackgroundImage;
       }
     },
     useDefaultLogo(val) {
       if (val && this.settings) {
+        this.previousLogo = this.logo;
         this.logo = this.settings.default_settings.company_form_settings_logo;
+      } else if (this.previousLogo) {
+        this.logo = this.previousLogo;
       }
     },
     useDefaultRedirectUrl(val) {
       if (val && this.settings) {
+        this.previousRedirectUrl = this.redirectUrl;
         this.redirectUrl = this.settings.default_settings.company_form_settings_redirect_url;
+      } else if (this.previousRedirectUrl) {
+        this.redirectUrl = this.previousRedirectUrl;
       }
     },
     useDefaultWelcomeMessageTitle(val) {
       if (val && this.settings) {
+        this.previousWelcomeMessageTitle = this.welcomeMessage.title;
         this.welcomeMessage.title = this.settings.default_settings.company_form_settings_welcome_message.title;
+      } else if (this.previousWelcomeMessageTitle) {
+        this.welcomeMessage.title = this.previousWelcomeMessageTitle;
       }
     },
     useDefaultWelcomeMessageDesc(val) {
       if (val && this.settings) {
+        this.previousWelcomeMessageDescription = this.welcomeMessage.description;
         this.welcomeMessage.description = this.settings.default_settings.company_form_settings_welcome_message.description;
+      } else if (this.previousWelcomeMessageDescription) {
+        this.welcomeMessage.description = this.previousWelcomeMessageDescription;
       }
     },
     useDefaultSuccessMessage(val) {
       if (val && this.settings) {
+        this.previousSuccessMessage = this.successMessage;
         this.successMessage = this.settings.default_settings.company_form_settings_success_message;
+      } else if (this.previousSuccessMessage) {
+        this.successMessage = this.previousSuccessMessage;
       }
     },
   },
@@ -242,6 +285,7 @@ export default {
     },
   }
 };
+
 </script>
 
 <style scoped>
