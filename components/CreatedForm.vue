@@ -119,7 +119,10 @@ props: {
   },
 
 
+mounted() {
+  console.log(this.currentField);
 
+},
 
   computed: {
     currentField() {
@@ -157,25 +160,37 @@ props: {
     },
     getComponent(field) {
       switch (field.form_field_type.type) {
-        case 'selectbox':
-        case 'salutation':
-          return 'SelectBox';
-        case 'checkbox':
-          return 'CheckBox';
-        case 'radio':
-          return 'RadioButton';
-        case 'textarea':
-          return 'TextArea';
-        case 'rating':
-          return 'Rating';
-        default:
-          return 'TextInput';
-      }
+    case 'transaction_type':
+    case 'property_type':
+    case 'salutation':
+    case 'selectbox':
+      return 'SelectBox';
+    case 'checkbox':
+      return 'CheckBox';
+    case 'yes_no':
+    case 'radio':
+      return 'RadioButton';
+    case 'textarea':
+      return 'TextArea';
+    case 'rating':
+      return 'Rating';
+    case 'firstname':
+    case 'surname':
+    case 'address':
+    case 'number':
+    case 'date':
+    case 'email':
+    case 'phone':
+    return 'TextInput';
+  
+    default:
+      return 'TextInput';
+  }
     },
     nextStep() {
       const currentField = this.formFieldData[this.currentStep];
 
-      if (currentField.is_required && !this.formDataLocal[currentField.unique_id]) {
+      if (currentField.is_required && currentField.form_field_options.option_value != '' && this.formData[currentField.unique_id] == '' || currentField.is_required &&  !this.formData[currentField.unique_id] && currentField.form_field_options.option_value != '' ) {
         this.errorMessage = `${currentField.label} alanı doldurulmalıdır.`;
         alert(this.errorMessage);
       } else {
@@ -193,7 +208,7 @@ props: {
     handleFinalSubmit() {
       const currentField = this.formFieldData[this.currentStep];
 
-      if (currentField.is_required && !this.formDataLocal[currentField.unique_id]) {
+      if (currentField.is_required && currentField.form_field_options.option_value != '' && this.formData[currentField.unique_id] == '' || currentField.is_required &&  !this.formData[currentField.unique_id] && currentField.form_field_options.option_value != '' ) {
         this.errorMessage = `${currentField.label} alanı doldurulmalıdır.`;
         alert(this.errorMessage);
       } else {

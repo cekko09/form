@@ -7,10 +7,10 @@
         type="checkbox"
         :id="`${field.unique_id}_${index}`"
         :name="field.unique_id"
-        :value="option.option_value"
-        :checked="isChecked(option.option_value)"
+        :value="option.option_label"
+        :checked="isChecked(option.option_label)"
        
-        @change="handleCheckboxChange(option.option_value, $event.target.checked)"
+        @change="handleCheckboxChange(option.option_label, $event.target.checked)"
         class="form-check-input"
       />
       <label :for="`${field.unique_id}_${index}`" class="form-check-label">{{ option.option_label }}</label>

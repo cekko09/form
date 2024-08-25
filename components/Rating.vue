@@ -2,7 +2,7 @@
   <div class="rating">
     <label :for="field.form_field_type_id">{{ field.label }}</label>
     <span
-      v-for="star in field.form_field_options"
+      v-for="star in stars"
       :key="star.sort_order"
       class="star"
       :class="{ filled: star.sort_order <= hoverValue || star.sort_order <= currentValue }"
@@ -22,12 +22,15 @@ export default {
       type: Object,
       required: true,
     },
-   
   },
   data() {
     return {
       hoverValue: 0,
       currentValue: this.field.default_value || 0,
+      stars: Array.from({ length: 5 }, (_, index) => ({
+        sort_order: index + 1,
+        option_value: index + 1,
+      })),
     };
   },
   methods: {

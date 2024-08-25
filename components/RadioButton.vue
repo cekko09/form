@@ -6,7 +6,7 @@
         type="radio"
         :id="`${field.unique_id}_${index}`"
         :name="field.unique_id"
-        :value="option.option_value"
+        :value="option.option_label"
     @input="$emit('input', $event.target.value)"
        
         class="form-check-input"

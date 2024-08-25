@@ -34,9 +34,10 @@
               <div class="form-group">
                 <label for="placeholder">Placeholder</label>
                 <input type="text" v-model="selectedFormField.placeholder" class="form-control" id="placeholder" />
+                
               </div>
             </div>
-            <div v-if="selectedFormField.form_field_type.type === 'selectbox' || selectedFormField.form_field_type.type === 'checkbox' || selectedFormField.form_field_type.type === 'radio'" class="form-group">
+            <div v-if="selectedFormField.form_field_type.type === 'selectbox' || selectedFormField.form_field_type.type === 'salutation' || selectedFormField.form_field_type.type === 'property_type' || selectedFormField.form_field_type.type === 'transaction_type' || selectedFormField.form_field_type.type === 'checkbox' || selectedFormField.form_field_type.type === 'radio' || selectedFormField.form_field_type.type === 'yes_no'"  class="form-group">
               <label for="options">Options</label>
               <div v-for="(option, index) in selectedFormField.form_field_options" :key="index" class="form-group">
                 <input type="text" v-model="option.option_label" placeholder="Option Label" class="form-control" />
@@ -193,34 +194,52 @@ export default {
       this.showWelcome = false;
     },
     getComponent(field) {
-      switch (field.form_field_type.type) {
-        case 'salutation':
-          return 'SelectBox';
-        case 'checkbox':
-          return 'CheckBox';
-        case 'radio':
-          return 'RadioButton';
-        case 'textarea':
-          return 'TextArea';
-        case 'rating':
-          return 'Rating';
-        default:
-          return 'TextInput';
-      }
-    },
-    addField() {
-      if (this.selectedField) {
-        const newField = JSON.parse(JSON.stringify(this.selectedField));
-        if (newField.form_field_type.type === 'rating') {
-          this.$set(this.formData, newField.unique_id, 0); 
-        } else {
-          this.$set(this.formData, newField.unique_id, newField.form_field_type.type === 'checkbox' ? [] : '');
-        }
-        this.formFields.push(newField);
-        this.selectedField = null;
-        this.selectedFormField = newField;
-      }
-    },
+  switch (field.form_field_type.type) {
+    case 'transaction_type':
+    case 'property_type':
+    case 'salutation':
+    case 'selectbox':
+      return 'SelectBox';
+    case 'checkbox':
+      return 'CheckBox';
+    case 'yes_no':
+    case 'radio':
+      return 'RadioButton';
+    case 'textarea':
+      return 'TextArea';
+    case 'rating':
+      return 'Rating';
+    case 'firstname':
+    case 'surname':
+    case 'address':
+    case 'number':
+    case 'date':
+    case 'email':
+    case 'phone':
+    return 'TextInput';
+  
+    default:
+      return 'TextInput';
+  }
+},
+addField() {
+  if (this.selectedField) {
+    const newField = JSON.parse(JSON.stringify(this.selectedField));
+    // Yeni bir unique_id oluştur
+    newField.unique_id = `field_${Math.random().toString(36).substr(2, 9)}`;
+    
+    // Rating field için default değer atama
+    if (newField.form_field_type.type === 'rating') {
+      this.$set(this.formData, newField.unique_id, 0);
+    } else {
+      this.$set(this.formData, newField.unique_id, newField.form_field_type.type === 'checkbox' ? [] : '');
+    }
+    
+    this.formFields.push(newField);
+    this.selectedField = null;
+    this.selectedFormField = newField;
+  }
+},
     removeField(index, field) {
       this.formFields.splice(index, 1);
       if (this.selectedFormField && this.selectedFormField.unique_id === field.unique_id) {
@@ -228,14 +247,15 @@ export default {
       }
     },
     editField(field) {
-      this.selectedFormField = {...field};
+      this.selectedFormField = this.formFields.find(f => f.unique_id === field.unique_id);
     },
     updateField() {
-      const index = this.formFields.findIndex(field => field.unique_id === this.selectedFormField.unique_id);
-      if (index !== -1) {
-        this.$set(this.formFields, index, this.selectedFormField);
-      }
-    },
+  const index = this.formFields.findIndex(field => field.unique_id === this.selectedFormField.unique_id);
+  if (index !== -1) {
+    // Seçilen form elemanının özelliklerini güncelle
+    this.$set(this.formFields, index, this.selectedFormField);
+  }
+},
     addOption() {
       if (this.selectedFormField && this.selectedFormField.form_field_options) {
         this.selectedFormField.form_field_options.push({ option_label: '', option_value: '' });
