@@ -171,11 +171,19 @@ export default {
   },
   async created() {
     try {
-      const response = await fetch('/form-data.json');
+      const response = await fetch('/form-field-types.json');
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      this.availableFields = await response.json();
+      const fieldTypes = await response.json();
+      this.availableFields = fieldTypes.map(field => ({
+        form_field_type: field,
+        unique_id: `field_${Math.random().toString(36).substr(2, 9)}`, // unique_id oluşturma
+        label: '',
+        is_required: false,
+        form_field_options: []
+      }));
+      
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error);
     }
@@ -186,9 +194,7 @@ export default {
     },
     getComponent(field) {
       switch (field.form_field_type.type) {
-       
         case 'salutation':
-        case 'selectbox': 
           return 'SelectBox';
         case 'checkbox':
           return 'CheckBox';
@@ -198,7 +204,6 @@ export default {
           return 'TextArea';
         case 'rating':
           return 'Rating';
-          
         default:
           return 'TextInput';
       }
