@@ -8,7 +8,7 @@
   "created_at": "2024-08-15 13:18:24",
   "updated_at": "2024-08-20 11:49:53",
   "success_message": "Formu doldurdugunuz icin tesekkur ederiz. Biz sizi arariz",
-  "redirect_url": "https://lifesycle.co.uk",
+  "redirect_url": "https://www.google.com/",
   "unique_id": "d02zMlhaiw",
   "description": null,
   "form_background_image": "https://wallpapers.com/images/hd/coffee-background-mxi5tjwxedm9bx0r.jpg",
@@ -29,7 +29,7 @@
       "description": "Welcome to our form!"
     }
   },
-  "logo": "https://lifesycle-cdn-develop.s3.eu-west-2.amazonaws.com/230c70e2-b1ce-4e0f-a737-19b40c4142a6/company_default_form_logo/n6TLutZ16IvnyJytwt8WwssO0NQOqDBxnToFpLnJ.png",
+  "logo": "https://dynamic.brandcrowd.com/asset/logo/3c51a079-920d-435c-8319-a724353573b2/logo-search-grid-1x?logoTemplateVersion=1&v=638186786151870000",
   "contact_profiles": [
     "2"
   ],
@@ -49,7 +49,7 @@
     "secondary_color": "#A18770"
   },
   "default_settings": {
-    "company_form_settings_logo": "230c70e2-b1ce-4e0f-a737-19b40c4142a6/company_default_form_logo/n6TLutZ16IvnyJytwt8WwssO0NQOqDBxnToFpLnJ.png",
+    "company_form_settings_logo": "https://dynamic.brandcrowd.com/asset/logo/3c51a079-920d-435c-8319-a724353573b2/logo-search-grid-1x?logoTemplateVersion=1&v=638186786151870000",
     "company_form_settings_primary_color": "#311010",
     "company_form_settings_secondary_color": "#ffffff",
     "company_form_settings_tertiary_color": "#311010",
@@ -58,7 +58,7 @@
       "title": "Welcome!!!"
     },
     "company_form_settings_success_message": "Heyyoooogg formu doldurdunuz ya lagn",
-    "company_form_settings_redirect_url": "https://lifesycle.co.uk"
+    "company_form_settings_redirect_url": "https://www.google.com/"
   },
-  "form_presentation_url": "https://oakwoodhomes.presentation.test-aws.lifesycle.co.uk/form/d02zMlhaiw"
+  "form_presentation_url": "https://www.google.com/"
 }
