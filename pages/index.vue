@@ -3,8 +3,11 @@
     <div class="container_fluid">
 
       <transition name="fade" mode="out-in">
-        <div v-if="!settings_done" class="settings_container">
-          <div class="settings">
+        <div v-if="!settings_done" class="settings_container p-5">
+
+          <div class="settings ">
+        <h3 class="text-center">Form Ayarları</h3>
+
             <form @submit.prevent="saveSettings" class="m-auto">
               <div class="form-group">
                 <label class="form-label" for="primaryColor">Primary Color</label>
